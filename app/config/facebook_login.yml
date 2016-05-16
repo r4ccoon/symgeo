@@ -1,0 +1,9 @@
+facebook_login:
+    base_url: "http://symgeo.dev/api/v1/oauth2/facebook"
+    providers:
+        Facebook:
+            enabled: true,
+            keys:
+              id: "1745663659014124"
+              secret: "4edc5057bf1687daaff6c9cc96f9b7c2"
+              scope: "email"

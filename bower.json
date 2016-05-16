@@ -14,6 +14,7 @@
     "tests"
   ],
   "dependencies": {
-    "foundation": "^5.5.3"
+    "what-input": "^2.0.1",
+    "jquery": "^2.2.3"
   }
 }

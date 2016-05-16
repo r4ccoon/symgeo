@@ -66,3 +66,18 @@ swiftmailer:
     username:  "%mailer_user%"
     password:  "%mailer_password%"
     spool:     { type: memory }
+
+assetic:
+    debug:          '%kernel.debug%'
+    use_controller: '%kernel.debug%'
+    filters:
+        cssrewrite: ~
+
+app:
+    social_login:
+        facebook:
+            base_url: "http://symgeo.dev/api/v1/oauth2/facebook"
+            enabled: true
+            app_id: "1745663659014124"
+            app_secret: "4edc5057bf1687daaff6c9cc96f9b7c2"
+            scope: "email"
