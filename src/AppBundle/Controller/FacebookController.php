@@ -2,19 +2,21 @@
 namespace AppBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\Security\Core\SecurityContextInterface;
+use AppBundle\Model\IConstructorController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 use Hybrid_Auth;
+use Hybrid_Endpoint;
 
-class FacebookController extends Controller
+class FacebookController extends Controller implements IConstructorController
 {
+	private $hybridAuth;
+	private $adapter;
 	private $userProfile;
 
-	/**
-	 * @Route("/facebook-login")
-	 */
-	public function facebookLoginAction()
+	public function __init()
 	{
 		$conf = $this->container->getParameter('app.social_login');
 
@@ -32,11 +34,28 @@ class FacebookController extends Controller
 			]
 		];
 
-		$hybridAuth = new Hybrid_Auth( $config );
+		$this->hybridAuth = new Hybrid_Auth($config);
+	}
 
-		$adapter = $hybridAuth->authenticate("Facebook");
-		$this->userProfile = $adapter->getUserProfile();
+	/**
+	 * @Route("/facebook-login")
+	 */
+	public function facebookLoginAction()
+	{
+		$this->adapter = $this->hybridAuth->authenticate("Facebook");
+		$this->userProfile = $this->adapter->getUserProfile();
+		$hybridauth_session_data = $this->hybridAuth->getSessionData();
 
+		// then store it on your database or something
+		//store_hybridauth_session($this->userProfile->identifier, $hybridauth_session_data);
+		//\Hybrid_Auth::storage()->set('user', $this->userProfile->identifier);
+
+		$html = $this->render(
+			'default/facebook.html.twig',
+			array('userProfile' => $this->userProfile, 'sessionId' => $hybridauth_session_data)
+		);
+
+		return new Response($html);
 	}
 
 	/**
@@ -44,11 +63,19 @@ class FacebookController extends Controller
 	 */
 	public function facebookCallBackAction()
 	{
-		$html = $this->render(
-			'default/facebook.html.twig',
-			array('userProfile' => $this->userProfile)
-		);
+		if (isset($_REQUEST['hauth_start']) || isset($_REQUEST['hauth_done'])) {
+			Hybrid_Endpoint::process();
+		} else {
+			$hybridauth_session_data = $this->hybridAuth->getSessionData();
+			$this->adapter = $this->hybridAuth->authenticate("Facebook");
+			$this->userProfile = $this->adapter->getUserProfile();
+		}
 
-		return new Response($html);
+		$identifier = Hybrid_Auth::storage()->getSessionData();
+
+		return $this->renderView(
+			'default/facebook.html.twig',
+			array('userProfile' => $identifier)
+		);
 	}
 }

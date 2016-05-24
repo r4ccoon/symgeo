@@ -1,5 +1,11 @@
 {% extends 'base.html.twig' %}
+
+{% block title %}FB{% endblock %}
+
+{% block bodyheader %}
+{% endblock %}
+
 {% block body %}
-    test
-    {{ userProfile }}
+    {{ dump(userProfile) }}
+    {{ dump(sessionId) }}
 {% endblock %}
