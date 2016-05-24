@@ -39,7 +39,8 @@
     {% endfor %}
 
     <div>
-        {% block fos_user_content %}<br style="clear:both;">
+        {% block fos_user_content %}
+            <br style="clear:both;">
             <a href="{{ path('fos_user_resetting_request') }}">Forgot password ?</a>
         {% endblock fos_user_content %}
     </div>

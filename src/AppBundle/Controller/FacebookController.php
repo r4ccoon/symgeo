@@ -50,12 +50,10 @@ class FacebookController extends Controller implements IConstructorController
 		//store_hybridauth_session($this->userProfile->identifier, $hybridauth_session_data);
 		//\Hybrid_Auth::storage()->set('user', $this->userProfile->identifier);
 
-		$html = $this->render(
+		return $this->render(
 			'default/facebook.html.twig',
 			array('userProfile' => $this->userProfile, 'sessionId' => $hybridauth_session_data)
 		);
-
-		return new Response($html);
 	}
 
 	/**
