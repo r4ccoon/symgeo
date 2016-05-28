@@ -10,7 +10,7 @@ parameters:
 
 framework:
     #esi:             ~
-    translator:      ~
+    translator:      { fallback: en }
     secret:          "%secret%"
     router:
         resource: "%kernel.root_dir%/config/routing.yml"
@@ -76,7 +76,7 @@ assetic:
 app:
     social_login:
         facebook:
-            base_url: "http://symgeo.dev/api/v1/oauth2/facebook"
+            base_url: "http://symgeo.dev/facebook/callback"
             enabled: true
             app_id: "1745663659014124"
             app_secret: "4edc5057bf1687daaff6c9cc96f9b7c2"

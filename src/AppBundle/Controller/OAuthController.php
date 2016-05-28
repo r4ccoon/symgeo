@@ -65,6 +65,16 @@ class OAuthController extends Controller implements IConstructorController
 
 	private function createClient()
 	{
+		/*$user = $this->getUser();
+		if (!is_object($user) || !$user instanceof UserInterface) {
+			throw new AccessDeniedException('This user does not have access to this section.');
+		}*/
+
+		$securityContext = $this->container->get('security.context');
+		if (!$securityContext->isGranted('ROLE_ADMIN')) {
+			throw new AccessDeniedException('This user does not have access to this section.');
+		}
+
 		$clientManager = $this->container->get('fos_oauth_server.client_manager.default');
 		$client = $clientManager->createClient();
 		$client->setRedirectUris(array('/oauth2/app'));

@@ -12,3 +12,7 @@ services:
         scope: request
         tags:
             - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
+
+    facebook.manager:
+        class: AppBundle\Model\FacebookManager
+        arguments: [ "@doctrine.orm.entity_manager" ]
