@@ -1,0 +1,15 @@
+{% extends 'adminBase.html.twig' %}
+
+{% block title %}User Panel Home{% endblock %}
+
+{% block pageContent %}
+    {{ dump(user) }}
+{% endblock %}
+
+{% block leftMenu %}
+    {% if is_granted('ROLE_ADMIN') %}
+        <li class="title">Administration</li>
+        <li><a href="/panel/users">Users</a></li>
+        <li><a href="/panel/fleets">Fleets</a></li>
+    {% endif %}
+{% endblock %}

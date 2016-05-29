@@ -21,10 +21,4 @@ class User extends BaseUser
 	{
 		parent::__construct();
 	}
-}
- 
-/**
- * *@ORM\OneToOne(targetEntity="FacebookUser")
- * *@ORM\JoinColumn(name="facebook_user_id", referencedColumnName="id")
-public $facebookUser;
- */
+} 

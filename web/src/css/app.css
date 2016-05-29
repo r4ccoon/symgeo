@@ -1,0 +1,29 @@
+.log-in-form {
+    border: 1px solid #cacaca;
+    padding: 1rem;
+    border-radius: 3px;
+}
+
+.off-canvas-wrapper {
+    height: 100%;
+}
+
+.off-canvas-wrapper-inner {
+    height: 100%;
+}
+
+.off-canvas .title {
+    color: #fefefe;
+    padding: 10px;
+    padding-left: 15px;
+    background: #8699a4;
+}
+
+/*.off-canvas .menu {
+    margin-top: 4px;
+}*/
+
+.close-button {
+    color: #fefefe;
+    top:0.25rem!important;
+}

@@ -2,6 +2,10 @@ app:
     resource: "@AppBundle/Controller/"
     type:     annotation
 
+panel:
+    path: /panel/
+    defaults: {_controller: AppBundle:Panel:index}
+
 fos_user:
     resource: "@FOSUserBundle/Resources/config/routing/all.xml"
 

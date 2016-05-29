@@ -55,14 +55,16 @@ class FacebookController extends Controller implements IConstructorController
 		try {
 			$this->adapter = $this->hybridAuth->authenticate("Facebook");
 			$this->userProfile = $this->adapter->getUserProfile();
-			$hybridauth_session_data = $this->hybridAuth->getSessionData();
+			//$hybridauth_session_data = $this->hybridAuth->getSessionData();
 
 			$this->loginUser($this->userProfile);
 
-			return $this->render(
+			/*return $this->render(
 				'default/facebook.html.twig',
 				array('userProfile' => $this->userProfile, 'sessionId' => $hybridauth_session_data)
-			);
+			);*/
+
+			return $this->redirectToRoute('panel', [], 301);
 		} catch (Exception $e) {
 			throw new AccessDeniedException();
 		}
@@ -92,6 +94,7 @@ class FacebookController extends Controller implements IConstructorController
 		$_SESSION['is_app'] = true;
 
 		// will be redirected by HAuth below
+		// this return will not be executed ?
 		return $this->render(
 			'default/facebook.html.twig',
 			array('userProfile' => $this->userProfile, 'sessionId' => $hybridauth_session_data)
@@ -106,12 +109,11 @@ class FacebookController extends Controller implements IConstructorController
 		if (isset($_REQUEST['hauth_start']) || isset($_REQUEST['hauth_done'])) {
 			Hybrid_Endpoint::process();
 		} else {
-			$hybridauth_session_data = $this->hybridAuth->getSessionData();
+			//$hybridauth_session_data = $this->hybridAuth->getSessionData();
 			$this->adapter = $this->hybridAuth->authenticate("Facebook");
 			$this->userProfile = $this->adapter->getUserProfile();
 		}
-
-		$identifier = Hybrid_Auth::storage()->getSessionData();
+		//$identifier = Hybrid_Auth::storage()->getSessionData();
 
 		$this->loginUser($this->userProfile);
 
@@ -124,10 +126,12 @@ class FacebookController extends Controller implements IConstructorController
 		}
 
 		// via web
-		return $this->renderView(
+		/*return $this->renderView(
 			'default/facebook.html.twig',
 			array('userProfile' => $identifier)
-		);
+		);*/
+
+		return $this->redirectToRoute('panel', [], 301);
 	}
 
 	/**
@@ -163,7 +167,7 @@ class FacebookController extends Controller implements IConstructorController
 			} else {
 				// someone is logged in
 				if ($fbUser->user) {
-					if ($user->id != $fbUser->user->id) {
+					if ($user->getId() != $fbUser->user->getId()) {
 						// if user has fb and if fb user != user.fb_user
 						// logout the other one. log in this one.
 						$this->logout();
