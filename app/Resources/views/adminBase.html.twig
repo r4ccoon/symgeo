@@ -47,5 +47,7 @@
 
 
 {% block javascripts %}
-    <script src="{{ asset('assets/dist/bundle.js') }}"></script>
+    {{ parent() }}
+    {#<script src="{{ asset('assets/dist/bundle.js') }}"></script>#}
+    <script src="http://localhost:8080/bundle.js"></script>
 {% endblock %}
