@@ -55,14 +55,8 @@ class FacebookController extends Controller implements IConstructorController
 		try {
 			$this->adapter = $this->hybridAuth->authenticate("Facebook");
 			$this->userProfile = $this->adapter->getUserProfile();
-			//$hybridauth_session_data = $this->hybridAuth->getSessionData();
 
 			$this->loginUser($this->userProfile);
-
-			/*return $this->render(
-				'default/facebook.html.twig',
-				array('userProfile' => $this->userProfile, 'sessionId' => $hybridauth_session_data)
-			);*/
 
 			return $this->redirectToRoute('panel', [], 301);
 		} catch (Exception $e) {
@@ -109,11 +103,9 @@ class FacebookController extends Controller implements IConstructorController
 		if (isset($_REQUEST['hauth_start']) || isset($_REQUEST['hauth_done'])) {
 			Hybrid_Endpoint::process();
 		} else {
-			//$hybridauth_session_data = $this->hybridAuth->getSessionData();
 			$this->adapter = $this->hybridAuth->authenticate("Facebook");
 			$this->userProfile = $this->adapter->getUserProfile();
 		}
-		//$identifier = Hybrid_Auth::storage()->getSessionData();
 
 		$this->loginUser($this->userProfile);
 
@@ -126,11 +118,6 @@ class FacebookController extends Controller implements IConstructorController
 		}
 
 		// via web
-		/*return $this->renderView(
-			'default/facebook.html.twig',
-			array('userProfile' => $identifier)
-		);*/
-
 		return $this->redirectToRoute('panel', [], 301);
 	}
 
@@ -156,8 +143,7 @@ class FacebookController extends Controller implements IConstructorController
 				// if not logged in -> register user
 				$user = $fbUser->user;
 				if (!$user) {
-					$user = $this->userManager->createUser();
-					//$this->get('doctrine.orm.entity_manager')->persist($user);
+					$user = $this->userManager->createUser(); 
 					// user cannot be found, this is a stray fb user or new fb user
 					$this->facebookManager->setUserByFBProfile($fbUser, $user);
 					$this->userManager->updateUser($user);

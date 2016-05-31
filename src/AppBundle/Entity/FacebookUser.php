@@ -17,7 +17,7 @@ class FacebookUser
 	protected $id;
 
 	/**
-	 * @ORM\ManyToOne(targetEntity="User", fetch="EAGER", cascade={"persist"})
+	 * @ORM\OneToOne(targetEntity="User", fetch="EAGER", cascade={"persist"})
 	 * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
 	 */
 	public $user;
