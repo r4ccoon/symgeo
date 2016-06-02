@@ -2,6 +2,10 @@ app:
     resource: "@AppBundle/Controller/"
     type:     annotation
 
+api_v1:
+    resource: "@ApiBundle/v1/Controller/"
+    type:     annotation
+
 panel:
     path: /panel/
     defaults: {_controller: AppBundle:Panel:index}

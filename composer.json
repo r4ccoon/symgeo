@@ -30,7 +30,8 @@
         "hybridauth/hybridauth": "^2",
         "symfony/assetic-bundle": "^2.8",
         "friendsofsymfony/user-bundle": "~2.0@dev",
-        "friendsofsymfony/oauth-server-bundle": "dev-master"
+        "friendsofsymfony/oauth-server-bundle": "dev-master",
+        "respect/validation": "^1.1"
     },
     "require-dev": {
         "sensio/generator-bundle": "^3.0",
