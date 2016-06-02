@@ -24,7 +24,6 @@ class GeoUserManager extends UserManager
 		$user->setPassword($params['password']);
 		$user->addRole('ROLE_FLEET_MANAGER');
 
-		$this->updateUser($user);
 		return $user;
 	}
 }

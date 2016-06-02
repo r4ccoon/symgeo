@@ -25,3 +25,25 @@ services:
         class: ApiBundle\v1\EventListener\ExceptionListener
         tags:
             - { name: kernel.event_listener, event: kernel.exception }
+
+    app.geo_user_voter:
+        class: AppBundle\Security\GeoUserVoter
+        tags:
+            - { name: security.voter }
+        public: false
+
+    serializer.method:
+        class: Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer
+        tags:
+            - { name:serializer.normalizer }
+
+    serializer.encoder.json:
+        class: Symfony\Component\Serializer\Encoder\JsonEncoder
+        tags:
+            - { name:serializer.encoder }
+
+    serializer:
+        class: Symfony\Component\Serializer\Serializer
+        arguments:
+            - ["@serializer.method"]
+            - {json: "@serializer.encoder.json" }

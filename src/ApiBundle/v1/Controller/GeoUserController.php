@@ -1,6 +1,7 @@
 <?php
 namespace ApiBundle\v1\Controller;
 
+use FOS\UserBundle\Model\UserInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Assetic\Filter\PackerFilter;
 use Doctrine\Common\CommonException;
@@ -30,13 +31,32 @@ class GeoUserController extends ApiController
 	}
 
 	/**
-	 * @Route("/api/v1/user")
+	 * @Route("/api/v1/user/")
+	 * @Method("GET")
+	 */
+	public function getUserAction()
+	{
+		$user = $this->getUser();
+		if (!is_object($user) || !$user instanceof UserInterface) {
+			throw new AccessDeniedException(
+				self::FAIL_NOT_AUTHORIZED_MESSAGE);
+		}
+
+		if ($user) {
+			return $this->renderDoctrineJSON(
+				['user' => $user],
+				self::SUCCESS);
+		} else {
+			throw new HttpException(401, "Not Authorised.");
+		}
+	}
+
+	/**
+	 * @Route("/api/v1/user/")
 	 * @Method("POST")
 	 */
 	public function createUserAction()
 	{
-		//$this->isGranted(USER, 'create');
-
 		$params = array();
 		$content = $this->get("request")->getContent();
 		if (!empty($content)) {
@@ -55,36 +75,21 @@ class GeoUserController extends ApiController
 			throw new HttpException(400, $exception->getFullMessage());
 		}
 
+		// create user temporarily
 		$user = $this->geoUserManager->createFleetManager($params);
 
-		if ($user) {
-			$this->renderJSON(
-				[id => $user->getId()],
-				SUCCESS_CREATED);
-		} else {
-			throw new HttpException(400, "Cannot create user");
-		}
-	}
+		// make sure this user is granted access to do it
+		$this->denyAccessUnlessGranted('create', $user, self::FAIL_NOT_AUTHORIZED_MESSAGE);
 
-
-	/**
-	 * @Route("/api/v1/user")
-	 * @Method("GET")
-	 */
-	public function getUserAction()
-	{
-		$user = $this->getUser();
-		if (!is_object($user) || !$user instanceof UserInterface) {
-			throw new AccessDeniedException(
-				self::FAIL_NOT_AUTHORIZED_MESSAGE);
-		}
+		// update / save to DB
+		$this->geoUserManager->updateUser($user);
 
 		if ($user) {
 			$this->renderJSON(
-				[id => $user->getId()],
+				["id" => $user->getId()],
 				self::SUCCESS_CREATED);
 		} else {
-			throw new HttpException(401, "Not Authorised.");
+			throw new HttpException(400, "Cannot create user");
 		}
 	}
 }

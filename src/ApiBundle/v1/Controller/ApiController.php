@@ -27,6 +27,14 @@ class ApiController extends Controller implements IConstructorController
 	{
 	}
 
+	protected function renderDoctrineJSON($params, $httpCode)
+	{
+		$serializer = $this->get('serializer');
+
+		$data = $serializer->normalize($params);
+		return $this->renderJSON($data, $httpCode);
+	}
+
 	protected function renderJSON($params, $httpCode)
 	{
 		$response = new JsonResponse($params);
