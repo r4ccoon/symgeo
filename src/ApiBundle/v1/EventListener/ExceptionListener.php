@@ -22,7 +22,7 @@ class ExceptionListener
 			];
 
 			$response = new JsonResponse($err);
-			$response->setStatusCode($exception->getStatusCode());
+			//$response->setStatusCode($exception->getStatusCode());
 			$response->headers->set('Content-Type', 'application/json');
 
 			// HttpExceptionInterface is a special type of exception that

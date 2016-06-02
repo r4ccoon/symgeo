@@ -28,6 +28,7 @@ services:
 
     app.geo_user_voter:
         class: AppBundle\Security\GeoUserVoter
+        arguments: ['@security.access.decision_manager']
         tags:
             - { name: security.voter }
         public: false

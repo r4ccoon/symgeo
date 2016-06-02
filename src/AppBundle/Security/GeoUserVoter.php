@@ -2,13 +2,21 @@
 namespace AppBundle\Security;
 
 use AppBundle\Entity\User;
+use FOS\UserBundle\Model\UserInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 class GeoUserVoter extends Voter
 {
 	const EDIT = 'edit';
 	const CREATE = 'create';
+	protected $decisionManager;
+
+	public function __construct(AccessDecisionManagerInterface $decisionManager)
+	{
+		$this->decisionManager = $decisionManager;
+	}
 
 	protected function supports($attribute, $subject)
 	{
@@ -18,9 +26,7 @@ class GeoUserVoter extends Voter
 		}
 
 		// only vote on User object. or create geo_user
-		if (!$subject instanceof \FOS\UserBundle\Model\User
-			|| $subject != 'geo_user'
-		) {
+		if (!$subject instanceof \FOS\UserBundle\Model\User) {
 			return false;
 		}
 
@@ -36,45 +42,25 @@ class GeoUserVoter extends Voter
 			return false;
 		}
 
+		if ($this->decisionManager->decide($token, array('ROLE_SUPER_ADMIN'))) {
+			return true;
+		}
+
 		if ($subject instanceof \FOS\UserBundle\Model\User) {
 			if ($attribute == self::CREATE) {
-				if ($user->isGranted("ROLE_ADMIN")) {
+				if ($this->decisionManager->decide($token, array('ROLE_ADMIN'))) {
 					return true;
-				} else if ($user->isGranted("ROLE_FLEET_MANAGER")) {
+				} else if ($this->decisionManager->decide($token, array('ROLE_FLEET_MANAGER'))) {
 					// manager can add a driver
 					if ($subject->hasRole("ROLE_DRIVER")) {
 						return true;
 					}
 				}
+
+				return false;
 			}
 		}
 
-		switch ($attribute) {
-			case self::CREATE:
-				return $this->canView($post, $user);
-			case self::EDIT:
-				return $this->canEdit($post, $user);
-		}
-
 		throw new \LogicException('This code should not be reached!');
-	}
-
-	private function canView(Post $post, User $user)
-	{
-		// if they can edit, they can view
-		if ($this->canEdit($post, $user)) {
-			return true;
-		}
-
-		// the Post object could have, for example, a method isPrivate()
-		// that checks a boolean $private property
-		return !$post->isPrivate();
-	}
-
-	private function canEdit(Post $post, User $user)
-	{
-		// this assumes that the data object has a getOwner() method
-		// to get the entity of the user who owns this data object
-		return $user === $post->getOwner();
 	}
 }

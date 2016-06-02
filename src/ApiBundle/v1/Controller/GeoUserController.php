@@ -9,6 +9,7 @@ use Respect\Validation\Exceptions\NestedValidationException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\SecurityContextInterface;
@@ -32,6 +33,7 @@ class GeoUserController extends ApiController
 
 	/**
 	 * @Route("/api/v1/user/")
+	 * @Route("/api/v1/user")
 	 * @Method("GET")
 	 */
 	public function getUserAction()
@@ -53,12 +55,13 @@ class GeoUserController extends ApiController
 
 	/**
 	 * @Route("/api/v1/user/")
+	 * @Route("/api/v1/user")
 	 * @Method("POST")
 	 */
-	public function createUserAction()
+	public function createUserAction(Request $request)
 	{
 		$params = array();
-		$content = $this->get("request")->getContent();
+		$content = $request->getContent();
 		if (!empty($content)) {
 			try {
 				$params = json_decode($content, true); // 2nd param to get as array
@@ -68,7 +71,7 @@ class GeoUserController extends ApiController
 		}
 
 		try {
-			v::alnum()->noWhitespace()->length(3, 32)->assert($params['username']);
+			v::alnum("_-.")->noWhitespace()->length(3, 32)->assert($params['username']);
 			v::email()->noWhitespace()->length(3, 32)->assert($params['email']);
 			v::length(6, 32)->assert($params['password']);
 		} catch (NestedValidationException $exception) {
@@ -85,7 +88,7 @@ class GeoUserController extends ApiController
 		$this->geoUserManager->updateUser($user);
 
 		if ($user) {
-			$this->renderJSON(
+			return $this->renderJSON(
 				["id" => $user->getId()],
 				self::SUCCESS_CREATED);
 		} else {
