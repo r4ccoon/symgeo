@@ -126,7 +126,7 @@ class GeoUserController extends ApiController
 		$this->denyAccessUnlessGranted('delete', $user, self::FAIL_NOT_AUTHORIZED_MESSAGE);
 
 		// delete from DB
-		$this->geoUserManager->deleteFleetManager($params);
+		$this->geoUserManager->deleteFleetUser($params);
 
 		if (!$user->getId()) {
 			return $this->renderJSON(
