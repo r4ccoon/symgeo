@@ -50,7 +50,7 @@ class GeoUserManager extends UserManager
 		return $user;
 	}
 
-	public function getFleetManager($params)
+	public function getFleetUser($params)
 	{
 		$user = $this->findUserByUsername($params['username']);
 		return $user;

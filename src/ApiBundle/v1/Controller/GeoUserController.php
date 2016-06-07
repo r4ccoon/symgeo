@@ -120,7 +120,7 @@ class GeoUserController extends ApiController
 		}
 
 		// get user
-		$user = $this->geoUserManager->getFleetManager($params);
+		$user = $this->geoUserManager->getFleetUser($params);
 
 		// make sure this user is granted access to do it
 		$this->denyAccessUnlessGranted('delete', $user, self::FAIL_NOT_AUTHORIZED_MESSAGE);
