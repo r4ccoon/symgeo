@@ -12,18 +12,39 @@ class GeoUserControllerTest extends BaseTestController
 		parent::__construct();
 	}
 
+	public function setUp()
+	{
+		parent::setUp();
+		$this->username = "test_user" . rand(1, 200);
+		$this->logIn2();
+	}
+
 	public function testIndex()
 	{
-		$this->logIn2();
-
 		$user = [
-			"username" => "test_user" . rand(1, 200),
-			"email" => "test_user" . rand(1, 200) . "@test-email-rpl.com",
+			"username" => $this->username,
+			"email" => $this->username . "@test-email-rpl.com",
 			"password" => "test_password"
 		];
 
 		$response = $this->sendJSONPost("user", $user);
 
 		$this->assertJsonResponse($response, 201);
+
+		return $this->username;
+	}
+
+	/**
+	 * @depends testIndex
+	 */
+	public function testDelete($username)
+	{
+		$user = [
+			"username" => $username
+		];
+
+		$response = $this->sendJSONDelete("user", $user);
+
+		$this->assertJsonResponse($response, 200);
 	}
 }

@@ -95,4 +95,45 @@ class GeoUserController extends ApiController
 			throw new HttpException(400, "Cannot create user");
 		}
 	}
+
+	/**
+	 * @Route("/api/v1/user/")
+	 * @Route("/api/v1/user")
+	 * @Method("DELETE")
+	 */
+	public function deleteUserAction(Request $request)
+	{
+		$params = array();
+		$content = $request->getContent();
+		if (!empty($content)) {
+			try {
+				$params = json_decode($content, true); // 2nd param to get as array
+			} catch (Exception $e) {
+				throw new HttpException(400, "Bad Parameters");
+			}
+		}
+
+		try {
+			v::noWhitespace()->length(3, 32)->assert($params['username']);
+		} catch (NestedValidationException $exception) {
+			throw new HttpException(400, $exception->getFullMessage());
+		}
+
+		// get user
+		$user = $this->geoUserManager->getFleetManager($params);
+
+		// make sure this user is granted access to do it
+		$this->denyAccessUnlessGranted('delete', $user, self::FAIL_NOT_AUTHORIZED_MESSAGE);
+
+		// delete from DB
+		$this->geoUserManager->deleteFleetManager($params);
+
+		if (!$user->getId()) {
+			return $this->renderJSON(
+				["result" => true],
+				self::SUCCESS_DELETED);
+		} else {
+			throw new HttpException(400, "Cannot delete user");
+		}
+	}
 }

@@ -18,6 +18,7 @@ class ApiController extends Controller implements IConstructorController
 {
 	const SUCCESS = Response::HTTP_OK;
 	const SUCCESS_CREATED = Response::HTTP_CREATED;
+	const SUCCESS_DELETED = Response::HTTP_OK;
 	const FAIL_BAD_PARAMS = Response::HTTP_BAD_REQUEST;
 	const FAIL_NOT_AUTHORIZED = Response::HTTP_UNAUTHORIZED;
 	const FAIL_NOT_FOUND = Response::HTTP_NOT_FOUND;

@@ -11,6 +11,8 @@ class GeoUserVoter extends Voter
 {
 	const EDIT = 'edit';
 	const CREATE = 'create';
+	const DELETE = 'delete';
+
 	protected $decisionManager;
 
 	public function __construct(AccessDecisionManagerInterface $decisionManager)
@@ -21,7 +23,7 @@ class GeoUserVoter extends Voter
 	protected function supports($attribute, $subject)
 	{
 		// if the attribute isn't one we support, return false
-		if (!in_array($attribute, array(self::CREATE, self::EDIT))) {
+		if (!in_array($attribute, array(self::CREATE, self::EDIT, self::DELETE))) {
 			return false;
 		}
 
@@ -46,11 +48,20 @@ class GeoUserVoter extends Voter
 			return true;
 		}
 
-		if ($subject instanceof \FOS\UserBundle\Model\User) {
-			if ($attribute == self::CREATE) {
+		if ($this->decisionManager->decide($token, array('ROLE_ADMIN'))) {
+			return true;
+		} else
+			return false;
+
+		/*if ($subject instanceof \FOS\UserBundle\Model\User) {
+			if ($attribute == self::CREATE || $attribute == self::DELETE) {
 				if ($this->decisionManager->decide($token, array('ROLE_ADMIN'))) {
 					return true;
-				} else if ($this->decisionManager->decide($token, array('ROLE_FLEET_MANAGER'))) {
+				}
+			}
+
+			if ($attribute == self::CREATE) {
+				if ($this->decisionManager->decide($token, array('ROLE_FLEET_MANAGER'))) {
 					// manager can add a driver
 					if ($subject->hasRole("ROLE_DRIVER")) {
 						return true;
@@ -59,7 +70,7 @@ class GeoUserVoter extends Voter
 
 				return false;
 			}
-		}
+		}*/
 
 		throw new \LogicException('This code should not be reached!');
 	}

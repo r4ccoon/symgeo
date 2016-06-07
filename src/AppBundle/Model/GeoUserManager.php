@@ -26,4 +26,18 @@ class GeoUserManager extends UserManager
 
 		return $user;
 	}
+
+	public function deleteFleetManager($params)
+	{
+		$user = $this->findUserByUsername($params['username']);
+		$this->deleteUser($user);
+
+		return $user;
+	}
+
+	public function getFleetManager($params)
+	{
+		$user = $this->findUserByUsername($params['username']);
+		return $user;
+	}
 }

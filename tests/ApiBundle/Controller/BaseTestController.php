@@ -42,7 +42,7 @@ class BaseTestController extends WebTestCase
 	}
 
 
-	/* 
+	/*
 	public function getUserManager()
 	{
 		return $this->container->get('geo_user.manager');
@@ -111,6 +111,28 @@ class BaseTestController extends WebTestCase
 		$client = $this->client;
 		$client->request(
 			'POST', // method
+			$this->prepareUrl($resUri, $uriParams), // url
+			[], // parameters
+			[], // files
+			[
+				'CONTENT_TYPE' => 'application/json'
+			], // headers
+			$body // body
+		);
+
+		$response = $client->getResponse();
+
+		return $response;
+	}
+
+	protected function sendJSONDelete($resUri, $body, $uriParams = null)
+	{
+		if (is_object($body) || is_array($body))
+			$body = json_encode($body);
+
+		$client = $this->client;
+		$client->request(
+			'DELETE', // method
 			$this->prepareUrl($resUri, $uriParams), // url
 			[], // parameters
 			[], // files
