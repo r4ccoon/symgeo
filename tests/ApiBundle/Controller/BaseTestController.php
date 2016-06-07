@@ -23,24 +23,30 @@ class BaseTestController extends WebTestCase
 	protected $cookieJar;
 	protected $token;
 
-	public function __construct()
-	{
-		/*$this->client = static::createClient();
-		$this->container = $this->client->getContainer();
-		$this->storage = new MockFileSessionStorage(__dir__ . '/../../../../app/cache/test/sessions');
-		$this->session = new Session($this->storage);*/
-	}
-
 	public function setUp()
 	{
 		$this->client = static::createClient();
 	}
 
+	public function logIn2()
+	{
+		$session = $this->client->getContainer()->get('session');
+
+		$firewall = 'main';
+		$token = new UsernamePasswordToken('admin', null, $firewall, array('ROLE_ADMIN'));
+		$session->set('_security_' . $firewall, serialize($token));
+		$session->save();
+
+		$cookie = new Cookie($session->getName(), $session->getId());
+		$this->client->getCookieJar()->set($cookie);
+	}
+
+
+	/* 
 	public function getUserManager()
 	{
 		return $this->container->get('geo_user.manager');
 	}
-
 	public function getSecurityManager()
 	{
 		return $this->container->get('fos_user.security.login_manager');
@@ -72,19 +78,6 @@ class BaseTestController extends WebTestCase
 		return $this->user;
 	}
 
-	public function logIn2()
-	{
-		$session = $this->client->getContainer()->get('session');
-
-		$firewall = 'main';
-		$token = new UsernamePasswordToken('admin', null, $firewall, array('ROLE_ADMIN'));
-		$session->set('_security_' . $firewall, serialize($token));
-		$session->save();
-
-		$cookie = new Cookie($session->getName(), $session->getId());
-		$this->client->getCookieJar()->set($cookie);
-	}
-
 	public function logIn(User $user, Response $response)
 	{
 		$this->session->start();
@@ -102,13 +95,7 @@ class BaseTestController extends WebTestCase
 		);
 
 		$this->session->save();
-	}
-
-	public function removeUser(User $user)
-	{
-
-	}
-
+	}*/
 
 	/**
 	 * @param $resUri string
@@ -120,9 +107,6 @@ class BaseTestController extends WebTestCase
 	{
 		if (is_object($body) || is_array($body))
 			$body = json_encode($body);
-
-		//$client = static::createClient();
-		//$client->getCookieJar()->set($this->cookie);
 
 		$client = $this->client;
 		$client->request(

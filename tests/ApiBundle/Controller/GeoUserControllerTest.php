@@ -17,8 +17,8 @@ class GeoUserControllerTest extends BaseTestController
 		$this->logIn2();
 
 		$user = [
-			"username" => "test_user",
-			"email" => "test_user@test-email-rpl.com",
+			"username" => "test_user" . rand(1, 200),
+			"email" => "test_user" . rand(1, 200) . "@test-email-rpl.com",
 			"password" => "test_password"
 		];
 
