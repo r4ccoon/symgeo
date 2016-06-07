@@ -79,7 +79,7 @@ class GeoUserController extends ApiController
 		}
 
 		// create user temporarily
-		$user = $this->geoUserManager->createFleetManager($params);
+		$user = $this->geoUserManager->createFleetUser($params);
 
 		// make sure this user is granted access to do it
 		$this->denyAccessUnlessGranted('create', $user, self::FAIL_NOT_AUTHORIZED_MESSAGE);

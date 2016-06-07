@@ -14,6 +14,15 @@ class GeoUserManager extends UserManager
 		parent::__construct($encoderFactory, $usernameCanonicalizer, $emailCanonicalizer, $om, $class);
 	}
 
+	public function createFleetUser($params)
+	{
+		$user = $this->_createUser($params);
+		if ($params['role'])
+			$user->addRole($params['role']);
+
+		return $user;
+	}
+
 	public function createFleetManager($params)
 	{
 		$user = $this->_createUser($params);

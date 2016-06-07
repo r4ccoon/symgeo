@@ -37,41 +37,20 @@ class GeoUserVoter extends Voter
 
 	protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
 	{
-		$user = $token->getUser();
+		//$user = $token->getUser();
 
 		if (!$subject instanceof \FOS\UserBundle\Model\User) {
-			// the user must be logged in; if not, deny access
 			return false;
 		}
 
-		if ($this->decisionManager->decide($token, array('ROLE_SUPER_ADMIN'))) {
-			return true;
+		// admin can create normal user
+		if (
+		$this->decisionManager->decide($token, array('ROLE_SUPER_ADMIN', 'ROLE_ADMIN'))
+		) {
+			if ($subject->hasRole("ROLE_DRIVER") || $subject->hasRole("ROLE_MANAGER") || $subject->hasRole("ROLE_USER"))
+				return true;
 		}
 
-		if ($this->decisionManager->decide($token, array('ROLE_ADMIN'))) {
-			return true;
-		} else
-			return false;
-
-		/*if ($subject instanceof \FOS\UserBundle\Model\User) {
-			if ($attribute == self::CREATE || $attribute == self::DELETE) {
-				if ($this->decisionManager->decide($token, array('ROLE_ADMIN'))) {
-					return true;
-				}
-			}
-
-			if ($attribute == self::CREATE) {
-				if ($this->decisionManager->decide($token, array('ROLE_FLEET_MANAGER'))) {
-					// manager can add a driver
-					if ($subject->hasRole("ROLE_DRIVER")) {
-						return true;
-					}
-				}
-
-				return false;
-			}
-		}*/
-
-		throw new \LogicException('This code should not be reached!');
+		return false;
 	}
 }
