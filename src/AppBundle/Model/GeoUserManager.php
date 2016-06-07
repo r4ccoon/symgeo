@@ -16,13 +16,28 @@ class GeoUserManager extends UserManager
 
 	public function createFleetManager($params)
 	{
+		$user = $this->_createUser($params);
+		$user->addRole('ROLE_MANAGER');
+
+		return $user;
+	}
+
+	public function createDriver($params)
+	{
+		$user = $this->_createUser($params);
+		$user->addRole('ROLE_DRIVER');
+
+		return $user;
+	}
+
+	private function _createUser($params)
+	{
 		$user = $this->createUser();
 		$user->setEnabled(true);
 
 		$user->setUsername($params['username']);
 		$user->setEmail($params['email']);
 		$user->setPassword($params['password']);
-		$user->addRole('ROLE_FLEET_MANAGER');
 
 		return $user;
 	}
