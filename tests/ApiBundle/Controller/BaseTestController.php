@@ -136,7 +136,7 @@ class BaseTestController extends WebTestCase
 			$body // body
 		);
 
-		$response = $client->getResponse(); 
+		$response = $client->getResponse();
 
 		return $response;
 	}

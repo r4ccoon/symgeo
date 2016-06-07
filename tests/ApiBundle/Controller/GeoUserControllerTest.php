@@ -10,8 +10,6 @@ class GeoUserControllerTest extends BaseTestController
 	public function __construct()
 	{
 		parent::__construct();
-
-		//$this->logIn($this->getUser('ROLE_ADMIN'), new Response());
 	}
 
 	public function testIndex()
