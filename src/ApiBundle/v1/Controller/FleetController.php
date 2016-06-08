@@ -31,10 +31,16 @@ class FleetController extends ApiController
 	 * @Route("/api/v1/user/{user_id}/fleet")
 	 * @Method("GET")
 	 */
-	public function getFleetByUserAction()
+	public function getFleetByUserAction($user_id)
 	{
 		// list all fleets of this user id
+		$fleet = $this->fleetManager->findByUserId($user_id);
 
+		$this->denyAccessUnlessGranted(VoterEvent::VIEW, $fleet, self::FAIL_NOT_AUTHORIZED_MESSAGE);
+
+		return $this->renderDoctrineJSON(
+			['fleet' => $fleet],
+			self::SUCCESS);
 	}
 
 	/**

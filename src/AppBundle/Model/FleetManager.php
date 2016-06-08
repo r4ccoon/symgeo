@@ -12,9 +12,9 @@ class FleetManager extends Manager
 		parent::__construct($om);
 	}
 
-	public function getFleetByUserId($user_id)
+	public function findByUserId($user_id)
 	{
-		return $this->repository->findOneBy(
+		return $this->repository->find(
 			array('user_id' => $user_id)
 		);
 	}

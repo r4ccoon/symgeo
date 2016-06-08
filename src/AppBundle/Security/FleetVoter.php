@@ -4,6 +4,7 @@ namespace AppBundle\Security;
 use AppBundle\AppBundle;
 use AppBundle\Entity\Fleet;
 use AppBundle\Entity\User;
+use AppBundle\VoterEvent;
 use FOS\UserBundle\Model\UserInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
@@ -22,16 +23,18 @@ class FleetVoter extends Voter
 	{
 		// if the attribute isn't one we support, return false
 		if (!in_array($attribute, array(
-			self::CREATE,
-			self::EDIT,
-			self::DELETE,
-			self::VIEW))
+			VoterEvent::CREATE,
+			VoterEvent::EDIT,
+			VoterEvent::DELETE,
+			VoterEvent::VIEW))
 		) {
 			return false;
 		}
 
-		// only vote on User object. or create geo_user
-		if (!$subject instanceof Fleet) {
+		// only vote on fleet object.
+		if (is_array($subject) && isset($subject[0]) && $subject[0] instanceof Fleet) {
+			return true;
+		} else if (!$subject instanceof Fleet) {
 			return false;
 		}
 
@@ -50,11 +53,20 @@ class FleetVoter extends Voter
 		if (
 		$this->decisionManager->decide($token, array('ROLE_MANAGER'))
 		) {
-			// manager can create/view/edit/delete its own fleet
 			$user = $token->getUser();
-			if ($subject->user == $user) {
-				return true;
-			}
+
+			// manager can see all their own fleets
+			if (is_array($subject) && $attribute == VoterEvent::VIEW) {
+				if (isset($subject[0]) && $subject[0]->user == $user) {
+					return true;
+				}
+
+				return false;
+			} else
+				// manager can create/view/edit/delete its own fleet
+				if ($subject->user == $user) {
+					return true;
+				}
 		}
 
 		return false;
