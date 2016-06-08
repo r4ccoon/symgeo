@@ -13,7 +13,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Encoder\JsonEncode;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-
 class ApiController extends Controller implements IConstructorController
 {
 	const SUCCESS = Response::HTTP_OK;

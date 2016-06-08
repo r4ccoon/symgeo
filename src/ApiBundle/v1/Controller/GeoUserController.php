@@ -54,6 +54,10 @@ class GeoUserController extends ApiController
 	}
 
 	/**
+	 * @Route("/api/v1/user/manager")
+	 * @Route("/api/v1/user/manager/")
+	 * @Route("/api/v1/user/driver")
+	 * @Route("/api/v1/user/driver/")
 	 * @Route("/api/v1/user/")
 	 * @Route("/api/v1/user")
 	 * @Method("POST")
@@ -78,10 +82,16 @@ class GeoUserController extends ApiController
 			throw new HttpException(400, $exception->getFullMessage());
 		}
 
-		// create user temporarily
-		$user = $this->geoUserManager->createFleetUser($params);
+		if (strpos($request->getPathInfo(), 'manager')) {
+			$user = $this->geoUserManager->createFleetManager($params);
+		} else if (strpos($request->getPathInfo(), 'driver')) {
+			$user = $this->geoUserManager->createFleetDriver($params);
+		} else {
+			// create user temporarily
+			$user = $this->geoUserManager->createFleetUser($params);
+		}
 
-		// make sure this user is granted access to do it
+		// make sure this creating user is granted access to do it
 		$this->denyAccessUnlessGranted('create', $user, self::FAIL_NOT_AUTHORIZED_MESSAGE);
 
 		// update / save to DB

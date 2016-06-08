@@ -47,7 +47,10 @@ class GeoUserVoter extends Voter
 		if (
 		$this->decisionManager->decide($token, array('ROLE_SUPER_ADMIN', 'ROLE_ADMIN'))
 		) {
-			if ($subject->hasRole("ROLE_DRIVER") || $subject->hasRole("ROLE_MANAGER") || $subject->hasRole("ROLE_USER"))
+			if ($subject->hasRole("ROLE_DRIVER") ||
+				$subject->hasRole("ROLE_MANAGER") ||
+				$subject->hasRole("ROLE_USER")
+			)
 				return true;
 		}
 

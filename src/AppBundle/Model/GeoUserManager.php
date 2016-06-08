@@ -17,8 +17,10 @@ class GeoUserManager extends UserManager
 	public function createFleetUser($params)
 	{
 		$user = $this->_createUser($params);
-		if ($params['role'])
+		if (isset($params['role']))
 			$user->addRole($params['role']);
+		else
+			$user->addRole('ROLE_USER');
 
 		return $user;
 	}
