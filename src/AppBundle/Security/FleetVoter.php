@@ -1,14 +1,15 @@
 <?php
 namespace AppBundle\Security;
 
+use AppBundle\AppBundle;
+use AppBundle\Entity\Fleet;
 use AppBundle\Entity\User;
-use AppBundle\VoterEvent;
 use FOS\UserBundle\Model\UserInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
-class GeoUserVoter extends Voter
+class FleetVoter extends Voter
 {
 	protected $decisionManager;
 
@@ -20,17 +21,17 @@ class GeoUserVoter extends Voter
 	protected function supports($attribute, $subject)
 	{
 		// if the attribute isn't one we support, return false
-		if (!in_array($attribute,
-			array(
-				VoterEvent::CREATE,
-				VoterEvent::EDIT,
-				VoterEvent::DELETE))
+		if (!in_array($attribute, array(
+			self::CREATE,
+			self::EDIT,
+			self::DELETE,
+			self::VIEW))
 		) {
 			return false;
 		}
 
 		// only vote on User object. or create geo_user
-		if (!$subject instanceof \FOS\UserBundle\Model\User) {
+		if (!$subject instanceof Fleet) {
 			return false;
 		}
 
@@ -39,19 +40,21 @@ class GeoUserVoter extends Voter
 
 	protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
 	{
-		if (!$subject instanceof \FOS\UserBundle\Model\User) {
-			return false;
-		}
-
-		// admin can create normal user
+		// admin, manager can create and can see
 		if (
 		$this->decisionManager->decide($token, array('ROLE_SUPER_ADMIN', 'ROLE_ADMIN'))
 		) {
-			if ($subject->hasRole("ROLE_DRIVER") ||
-				$subject->hasRole("ROLE_MANAGER") ||
-				$subject->hasRole("ROLE_USER")
-			)
+			return true;
+		}
+
+		if (
+		$this->decisionManager->decide($token, array('ROLE_MANAGER'))
+		) {
+			// manager can create/view/edit/delete its own fleet
+			$user = $token->getUser();
+			if ($subject->user == $user) {
 				return true;
+			}
 		}
 
 		return false;

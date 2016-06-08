@@ -1,6 +1,7 @@
 <?php
 namespace ApiBundle\v1\Controller;
 
+use AppBundle\VoterEvent;
 use FOS\UserBundle\Model\UserInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Assetic\Filter\PackerFilter;
@@ -11,6 +12,7 @@ use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Respect\Validation\Validator as v;
@@ -92,7 +94,7 @@ class GeoUserController extends ApiController
 		}
 
 		// make sure this creating user is granted access to do it
-		$this->denyAccessUnlessGranted('create', $user, self::FAIL_NOT_AUTHORIZED_MESSAGE);
+		$this->denyAccessUnlessGranted(VoterEvent::CREATE, $user, self::FAIL_NOT_AUTHORIZED_MESSAGE);
 
 		// update / save to DB
 		$this->geoUserManager->updateUser($user);
@@ -133,7 +135,7 @@ class GeoUserController extends ApiController
 		$user = $this->geoUserManager->getFleetUser($params);
 
 		// make sure this user is granted access to do it
-		$this->denyAccessUnlessGranted('delete', $user, self::FAIL_NOT_AUTHORIZED_MESSAGE);
+		$this->denyAccessUnlessGranted(VoterEvent::DELETE, $user, self::FAIL_NOT_AUTHORIZED_MESSAGE);
 
 		// delete from DB
 		$this->geoUserManager->deleteFleetUser($params);

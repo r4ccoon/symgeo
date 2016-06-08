@@ -31,7 +31,8 @@
 		"symfony/assetic-bundle": "^2.8",
 		"friendsofsymfony/user-bundle": "~2.0@dev",
 		"friendsofsymfony/oauth-server-bundle": "dev-master",
-		"respect/validation": "^1.1"
+		"respect/validation": "^1.1",
+		"cocur/slugify": "^2.1"
 	},
 	"require-dev": {
 		"sensio/generator-bundle": "^3.0",

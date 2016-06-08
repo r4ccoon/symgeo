@@ -4,7 +4,7 @@ namespace AppBundle\Model;
 use AppBundle\Entity\FacebookUser;
 use Doctrine\ORM\EntityManager;
 
-class FacebookManager
+class FacebookManager extends Manager
 {
 	protected $objectManager;
 	protected $repository;
@@ -12,12 +12,8 @@ class FacebookManager
 
 	public function __construct(EntityManager $om)
 	{
-		$class = 'AppBundle\Entity\FacebookUser';
-		$this->objectManager = $om;
-		$this->repository = $om->getRepository($class);
-
-		$metadata = $om->getClassMetadata($class);
-		$this->class = $metadata->getName();
+		$this->class = 'AppBundle\Entity\FacebookUser';
+		parent::__construct($om);
 	}
 
 	public function findFBUserByIdentifier($identifier)
@@ -36,7 +32,7 @@ class FacebookManager
 			$fbUser->{$key} = $val;
 		}
 
-		$this->updateFBUser($fbUser);
+		$this->update($fbUser);
 
 		return $fbUser;
 	}
@@ -53,21 +49,7 @@ class FacebookManager
 
 		// link this user to fb user
 		$this->linkUser($fbUser, $user);
-		$this->updateFBUser($fbUser);
-	}
-
-	/**
-	 * Updates a user.
-	 *
-	 * @param UserInterface $user
-	 * @param Boolean $andFlush Whether to flush the changes (default true)
-	 */
-	public function updateFBUser($fbUser, $andFlush = true)
-	{
-		$this->objectManager->persist($fbUser);
-		if ($andFlush) {
-			$this->objectManager->flush();
-		}
+		$this->update($fbUser);
 	}
 
 	/**
@@ -80,7 +62,7 @@ class FacebookManager
 		if (!$userProfile->user) {
 			$userProfile->user = $user;
 
-			$this->updateFBUser($userProfile);
+			$this->update($userProfile);
 		}
 	}
 

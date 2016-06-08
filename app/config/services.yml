@@ -17,6 +17,10 @@ services:
         class: AppBundle\Model\FacebookManager
         arguments: [ "@doctrine.orm.entity_manager" ]
 
+    fleet.manager:
+        class: AppBundle\Model\FleetManager
+        arguments: [ "@doctrine.orm.entity_manager" ]
+
     geo_user.manager:
         class: AppBundle\Model\GeoUserManager
         arguments: ["@security.encoder_factory", "@fos_user.util.username_canonicalizer", "@fos_user.util.email_canonicalizer", "@fos_user.object_manager", %fos_user.model.user.class%]
@@ -32,6 +36,13 @@ services:
         tags:
             - { name: security.voter }
         public: false
+
+    app.fleet_voter:
+            class: AppBundle\Security\FleetVoter
+            arguments: ['@security.access.decision_manager']
+            tags:
+                - { name: security.voter }
+            public: false
 
     serializer.method:
         class: Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer

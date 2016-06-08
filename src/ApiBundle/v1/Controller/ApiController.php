@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 class ApiController extends Controller implements IConstructorController
 {
+	const FAIL_NOT_AUTHORIZED_MESSAGE = 'unauthorized';
 	const SUCCESS = Response::HTTP_OK;
 	const SUCCESS_CREATED = Response::HTTP_CREATED;
 	const SUCCESS_DELETED = Response::HTTP_OK;
