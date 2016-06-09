@@ -1,8 +1,11 @@
 <?php
 namespace ApiBundle\v1\Controller;
 
+use AppBundle\Model\FleetManager;
 use AppBundle\VoterEvent;
+use FOS\UserBundle\Model\User;
 use FOS\UserBundle\Model\UserInterface;
+use FOS\UserBundle\Model\UserManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Assetic\Filter\PackerFilter;
 use Doctrine\Common\CommonException;
@@ -17,15 +20,23 @@ use Respect\Validation\Validator as v;
 
 class FleetController extends ApiController
 {
+	/**
+	 * @var FleetManager
+	 */
 	private $fleetManager;
+
+	/**
+	 * @var UserManager
+	 */
+	private $userManager;
 
 	public function __init()
 	{
 		parent::__init();
 
 		$this->fleetManager = $this->get('fleet.manager');
+		$this->userManager = $this->get('fos_user.user_manager');
 	}
-
 
 	/**
 	 * @Route("/api/v1/user/{user_id}/fleet")
@@ -38,7 +49,7 @@ class FleetController extends ApiController
 
 		$this->denyAccessUnlessGranted(VoterEvent::VIEW, $fleet, self::FAIL_NOT_AUTHORIZED_MESSAGE);
 
-		return $this->renderDoctrineJSON(
+		return $this->renderJSON(
 			['fleet' => $fleet],
 			self::SUCCESS);
 	}
@@ -53,7 +64,7 @@ class FleetController extends ApiController
 
 		$this->denyAccessUnlessGranted(VoterEvent::VIEW, $fleet, self::FAIL_NOT_AUTHORIZED_MESSAGE);
 
-		return $this->renderDoctrineJSON(
+		return $this->renderJSON(
 			['fleet' => $fleet],
 			self::SUCCESS);
 	}
@@ -83,8 +94,11 @@ class FleetController extends ApiController
 
 		$fleet = $this->fleetManager->create();
 
-		$params['user'] = $this->getUser();
-		$this->fleetManager->setFromParams($params);
+		$params['user'] = $this->userManager->findUserBy(['id' => $params['user_id']]);
+		if (!$params['user'] instanceof User)
+			throw new HttpException(400, "User not found");
+
+		$this->fleetManager->setFromParams($fleet, $params);
 
 		// make sure this creating user is granted access to do it
 		$this->denyAccessUnlessGranted(VoterEvent::CREATE, $fleet, self::FAIL_NOT_AUTHORIZED_MESSAGE);
@@ -94,7 +108,7 @@ class FleetController extends ApiController
 
 		if ($fleet) {
 			return $this->renderJSON(
-				["id" => $fleet->id],
+				['fleet' => $fleet],
 				self::SUCCESS_CREATED);
 		} else {
 			throw new HttpException(400, "Cannot create user");
@@ -103,6 +117,7 @@ class FleetController extends ApiController
 
 	/**
 	 * @Route("/api/v1/fleet")
+	 * @Route("/api/v1/fleet/")
 	 * @Method("DELETE")
 	 */
 	public function deleteFleetAction(Request $request)
@@ -132,7 +147,7 @@ class FleetController extends ApiController
 		// delete from DB
 		$this->fleetManager->delete($fleet);
 
-		if (!$fleet->id) {
+		if (!$fleet->getId()) {
 			return $this->renderJSON(
 				["result" => true],
 				self::SUCCESS_DELETED);

@@ -16,7 +16,7 @@ class GeoUserControllerTest extends BaseTestController
 	{
 		parent::setUp();
 		$this->username = "test_user" . rand(1, 200);
-		$this->logIn2();
+		$this->logIn();
 	}
 
 	public function testIndex()

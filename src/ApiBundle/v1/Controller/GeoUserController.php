@@ -1,8 +1,10 @@
 <?php
 namespace ApiBundle\v1\Controller;
 
+use AppBundle\Model\GeoUserManager;
 use AppBundle\VoterEvent;
 use FOS\UserBundle\Model\UserInterface;
+use FOS\UserBundle\Model\UserManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Assetic\Filter\PackerFilter;
 use Doctrine\Common\CommonException;
@@ -22,7 +24,14 @@ class GeoUserController extends ApiController
 	const USER = 'user';
 	const FAIL_NOT_AUTHORIZED_MESSAGE = 'unauthorized';
 
+	/**
+	 * @var UserManager
+	 */
 	private $userManager;
+
+	/**
+	 * @var GeoUserManager
+	 */
 	private $geoUserManager;
 
 	public function __init()
@@ -47,7 +56,7 @@ class GeoUserController extends ApiController
 		}
 
 		if ($user) {
-			return $this->renderDoctrineJSON(
+			return $this->renderJSON(
 				['user' => $user],
 				self::SUCCESS);
 		} else {
@@ -126,7 +135,10 @@ class GeoUserController extends ApiController
 		}
 
 		try {
-			v::noWhitespace()->length(3, 32)->assert($params['username']);
+			if (isset($params['username']))
+				v::noWhitespace()->length(3, 32)->assert($params['username']);
+			if (isset($params['id']))
+				v::numeric()->assert($params['id']);
 		} catch (NestedValidationException $exception) {
 			throw new HttpException(400, $exception->getFullMessage());
 		}

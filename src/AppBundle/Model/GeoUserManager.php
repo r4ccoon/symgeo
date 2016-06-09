@@ -55,7 +55,7 @@ class GeoUserManager extends UserManager
 
 	public function deleteFleetUser($params)
 	{
-		$user = $this->findUserByUsername($params['username']);
+		$user = $this->findUserBy($params);
 		$this->deleteUser($user);
 
 		return $user;
@@ -63,7 +63,7 @@ class GeoUserManager extends UserManager
 
 	public function getFleetUser($params)
 	{
-		$user = $this->findUserByUsername($params['username']);
+		$user = $this->findUserBy($params);
 		return $user;
 	}
 }

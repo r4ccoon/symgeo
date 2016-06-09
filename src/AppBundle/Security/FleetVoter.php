@@ -34,11 +34,11 @@ class FleetVoter extends Voter
 		// only vote on fleet object.
 		if (is_array($subject) && isset($subject[0]) && $subject[0] instanceof Fleet) {
 			return true;
-		} else if (!$subject instanceof Fleet) {
-			return false;
+		} else if ($subject instanceof Fleet) {
+			return true;
 		}
 
-		return true;
+		return false;
 	}
 
 	protected function voteOnAttribute($attribute, $subject, TokenInterface $token)

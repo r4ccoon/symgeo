@@ -18,7 +18,7 @@ class Fleet
 
 	/**
 	 * @ORM\ManyToOne(targetEntity="User", fetch="EAGER", cascade={"persist"})
-	 * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+	 * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=false)
 	 */
 	public $user;
 
@@ -34,5 +34,10 @@ class Fleet
 
 	public function __construct()
 	{
+	}
+
+	public function getId()
+	{
+		return $this->id;
 	}
 }
