@@ -42,8 +42,7 @@ class GeoUserController extends ApiController
 		$this->geoUserManager = $this->get('geo_user.manager');
 	}
 
-	/**
-	 * @Route("/api/v1/user/")
+	/** 
 	 * @Route("/api/v1/user")
 	 * @Method("GET")
 	 */
@@ -66,10 +65,7 @@ class GeoUserController extends ApiController
 
 	/**
 	 * @Route("/api/v1/user/manager")
-	 * @Route("/api/v1/user/manager/")
 	 * @Route("/api/v1/user/driver")
-	 * @Route("/api/v1/user/driver/")
-	 * @Route("/api/v1/user/")
 	 * @Route("/api/v1/user")
 	 * @Method("POST")
 	 */
@@ -118,7 +114,6 @@ class GeoUserController extends ApiController
 	}
 
 	/**
-	 * @Route("/api/v1/user/")
 	 * @Route("/api/v1/user")
 	 * @Method("DELETE")
 	 */

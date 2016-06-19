@@ -70,7 +70,6 @@ class FleetController extends ApiController
 	}
 
 	/**
-	 * @Route("/api/v1/fleet/")
 	 * @Route("/api/v1/fleet")
 	 * @Method("POST")
 	 */
@@ -116,8 +115,7 @@ class FleetController extends ApiController
 	}
 
 	/**
-	 * @Route("/api/v1/fleet")
-	 * @Route("/api/v1/fleet/")
+	 * @Route("/api/v1/fleet") 
 	 * @Method("DELETE")
 	 */
 	public function deleteFleetAction(Request $request)

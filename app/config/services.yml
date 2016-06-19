@@ -25,6 +25,10 @@ services:
         class: AppBundle\Model\GeoUserManager
         arguments: ["@security.encoder_factory", "@fos_user.util.username_canonicalizer", "@fos_user.util.email_canonicalizer", "@fos_user.object_manager", %fos_user.model.user.class%]
 
+    position.manager:
+        class: AppBundle\Model\DriverPositionManager
+        arguments: ["@doctrine.orm.entity_manager"]
+
     api.exception_listener:
         class: ApiBundle\v1\EventListener\ExceptionListener
         tags:
