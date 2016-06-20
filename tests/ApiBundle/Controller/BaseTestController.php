@@ -26,14 +26,22 @@ class BaseTestController extends WebTestCase
 	public function setUp()
 	{
 		$this->client = static::createClient();
+		$this->container = static::$kernel->getContainer();
 	}
 
 	public function logIn($username = 'admin', $password = null)
 	{
 		$session = $this->client->getContainer()->get('session');
 
+		$roles = array('ROLE_ADMIN');
+		if ($username != 'admin') {
+			$user = $this->getUserManager()->findUserByUsername($username);
+			$username = $user;
+			$roles = $user->getRoles();
+		}
+
 		$firewall = 'main';
-		$token = new UsernamePasswordToken($username, $password, $firewall, array('ROLE_ADMIN'));
+		$token = new UsernamePasswordToken($username, $password, $firewall, $roles);
 		$session->set('_security_' . $firewall, serialize($token));
 		$session->save();
 
@@ -41,61 +49,15 @@ class BaseTestController extends WebTestCase
 		$this->client->getCookieJar()->set($cookie);
 	}
 
-
-	/*
 	public function getUserManager()
 	{
 		return $this->container->get('geo_user.manager');
 	}
+
 	public function getSecurityManager()
 	{
 		return $this->container->get('fos_user.security.login_manager');
 	}
-
-	public function getUser($role = null)
-	{
-		if (!isset($this->user)) {
-			$user = $this->getUserManager()->findUserByUsername('user');
-
-			if (isset($user)) {
-				$this->user = $user;
-			} else {
-				$this->user = $this->getUserManager()->createUser();
-
-				$this->user->setEnabled(true);
-				$this->user->setUsername('user');
-				$this->user->setEmail('user@rpl.im');
-				$this->user->setPlainPassword('user');
-
-				if (isset($role)) {
-					$this->user->addRole($role);
-				}
-
-				$this->getUserManager()->updateUser($this->user);
-			}
-		}
-
-		return $this->user;
-	}
-
-	public function logIn(User $user, Response $response)
-	{
-		$this->session->start();
-
-		$this->cookie = new Cookie('MOCKSESSID', $this->storage->getId());
-		$this->cookieJar = new CookieJar();
-		$this->cookieJar->set($this->cookie);
-		$this->token = new UsernamePasswordToken($user, 'user', 'main', $user->getRoles());
-		$this->session->set('_security_main', serialize($this->token));
-
-		$this->getSecurityManager()->loginUser(
-			$this->container->getParameter('fos_user.firewall_name'),
-			$user,
-			$response
-		);
-
-		$this->session->save();
-	}*/
 
 	/**
 	 * @param $resUri string

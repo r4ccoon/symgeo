@@ -52,5 +52,10 @@ class DriverPositionManager extends Manager
 
 	public function setFromParams($pos, $params)
 	{
+		$pos->user = $params['user'];
+		$pos->lat = $params['lat'];
+		$pos->lng = $params['lng'];
+
+		return $pos;
 	}
 }

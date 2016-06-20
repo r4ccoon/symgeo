@@ -10,4 +10,5 @@ final class VoterEvent
 	const DELETE = 'delete';
 	const VIEW_POSITION = 'view_position';
 	const VIEW_POSITION_RADIUS = 'view_position_radius';
+	const CREATE_POSITION = 'create_position';
 }

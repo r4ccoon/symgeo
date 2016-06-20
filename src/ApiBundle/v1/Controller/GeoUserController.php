@@ -42,7 +42,7 @@ class GeoUserController extends ApiController
 		$this->geoUserManager = $this->get('geo_user.manager');
 	}
 
-	/** 
+	/**
 	 * @Route("/api/v1/user")
 	 * @Method("GET")
 	 */
@@ -92,7 +92,7 @@ class GeoUserController extends ApiController
 		if (strpos($request->getPathInfo(), 'manager')) {
 			$user = $this->geoUserManager->createFleetManager($params);
 		} else if (strpos($request->getPathInfo(), 'driver')) {
-			$user = $this->geoUserManager->createFleetDriver($params);
+			$user = $this->geoUserManager->createDriver($params);
 		} else {
 			// create user temporarily
 			$user = $this->geoUserManager->createFleetUser($params);

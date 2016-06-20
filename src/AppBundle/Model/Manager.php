@@ -36,6 +36,31 @@ abstract class Manager
 		$this->objectManager->flush();
 	}
 
+	public function deleteBy($params)
+	{
+		$qb = $this->objectManager->createQueryBuilder();
+		if (is_array($params)) {
+			$qb->delete()->from($this->class, 'a');
+			$c = 0;
+			foreach ($params as $key => $val) {
+				if ($c == 0)
+					$qb = $qb->where("a.$key = :$key");
+				else
+					$qb = $qb->andWhere("a.$key = :$key");
+
+				$c++;
+			}
+
+			$qb->setParameters($params);
+			$q = $qb->getQuery();
+			$result = $q->execute();
+
+			return $result;
+		}
+
+		return null;
+	}
+
 	public function update($obj, $andFlush = true)
 	{
 		$this->objectManager->persist($obj);

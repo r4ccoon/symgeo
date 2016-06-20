@@ -25,7 +25,6 @@ class PositionController extends ApiController
 	 */
 	private $userManager;
 
-
 	/**
 	 * @var DriverPositionManager
 	 */
@@ -158,11 +157,14 @@ class PositionController extends ApiController
 		try {
 			v::notBlank()->floatVal()->assert($params['lat']);
 			v::notBlank()->floatVal()->assert($params['lng']);
+			/*$params['lat'] = floatval($params['lat']);
+			$params['lng'] = floatval($params['lng']);*/
 		} catch (NestedValidationException $exception) {
 			throw new HttpException(400, $exception->getFullMessage());
 		}
 
 		$pos = $this->positionManager->create();
+		$params['user'] = $this->getUser();
 		$this->positionManager->setFromParams($pos, $params);
 
 		// update / save to DB

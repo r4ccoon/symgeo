@@ -52,6 +52,8 @@ class DriverPosition
 	 */
 	public function onPrePersist()
 	{
-		$this->createdAt = new \DateTime(time());
+		$dt = new \DateTime();
+		$dt->setTimestamp(time());
+		$this->createdAt = $dt;
 	}
 }

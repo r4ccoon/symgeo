@@ -42,11 +42,18 @@ services:
         public: false
 
     app.fleet_voter:
-            class: AppBundle\Security\FleetVoter
-            arguments: ['@security.access.decision_manager']
-            tags:
-                - { name: security.voter }
-            public: false
+        class: AppBundle\Security\FleetVoter
+        arguments: ['@security.access.decision_manager']
+        tags:
+            - { name: security.voter }
+        public: false
+
+    app.position_voter:
+        class: AppBundle\Security\PositionVoter
+        arguments: ['@security.access.decision_manager']
+        tags:
+            - { name: security.voter }
+        public: false
 
     serializer.method:
         class: Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer
