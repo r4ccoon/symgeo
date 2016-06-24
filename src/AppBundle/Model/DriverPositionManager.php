@@ -13,41 +13,62 @@ class DriverPositionManager extends Manager
 		parent::__construct($om);
 	}
 
-	public function findByUserId($user_id)
+	public function findOneByUserId($user_id)
 	{
-		return $this->repository->find(
-			array('user_id' => $user_id),
+		return $this->repository->findOneBy(
+			array('user' => $user_id),
 			array('createdAt' => 'DESC')
 		);
 	}
 
-	public function findOneByUserId($user_id)
+	public function findByUserId($user_id, AreaRange $area_range = null, TimeRange $time_range = null)
 	{
-		return $this->repository->find(
-			array('user_id' => $user_id),
-			array('createdAt' => 'DESC'),
-			1
-		);
+		return $this->findByRange($area_range, $time_range, $user_id);
 	}
 
-	public function findByRange($start, $end, $user_id = null)
+	public function findByTimeRange(TimeRange $time_range, AreaRange $area_range = null, $user_id = null)
 	{
-		$qb = $this->objectManager->createQueryBuilder();
-		$qb->where("created_at BETWEEN :start AND :end")
-			->setParameter("start", $start)
-			->setParameter("end", $end);
+		return $this->findByRange($area_range, $time_range, $user_id);
+	}
+
+	public function findByAreaRange(AreaRange $area_range, TimeRange $time_range = null, $user_id = null)
+	{
+		return $this->findByRange($area_range, $time_range, $user_id);
+	}
+
+	protected function findByRange(AreaRange $area_range = null, TimeRange $time_range = null, $user_id = null)
+	{
+		$qb = $this->repository->createQueryBuilder("a");
+		$qb->where("a.id > 0");
 
 		if ($user_id != null) {
-			$qb->andWhere("user_id", $user_id);
+			$qb->andWhere("a.user = :user_id")
+				->setParameter("user_id", $user_id);
+		}
+
+		if ($time_range != null) {
+			$qb->andWhere("a.createdAt BETWEEN :start AND :end")
+				->setParameter("start", $time_range->getStart())
+				->setParameter("end", $time_range->getEnd());
+		}
+
+		if ($area_range != null) {
+			$startAreaX = $area_range->getTopLeftX();
+			$endAreaX = $area_range->getTopLeftX() + $area_range->getRadius();
+			$startAreaY = $area_range->getTopLeftY();
+			$endAreaY = $area_range->getTopLeftY() + $area_range->getRadius();
+
+			$qb->andWhere("a.lat BETWEEN :startAreaX AND :endAreaX")
+				->andWhere("a.lng BETWEEN :startAreaY AND :endAreaY")
+				->setParameter("startAreaX", $startAreaX)
+				->setParameter("endAreaX", $endAreaX)
+				->setParameter("startAreaY", $startAreaY)
+				->setParameter("endAreaY", $endAreaY);
 		}
 
 		$q = $qb->getQuery();
 		$result = $q->getResult();
 		return $result;
-	}
-
-	public function findByRadius($mode, $fromX, $fromY, $radius, $user_id)
-	{
 	}
 
 	public function setFromParams($pos, $params)

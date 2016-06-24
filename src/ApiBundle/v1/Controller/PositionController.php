@@ -50,7 +50,7 @@ class PositionController extends ApiController
 	{
 		/**
 		 * SEARCH:
-		 * [range]: unix_timestamp (start), unix_timestamp (end)
+		 * [timerange]: unix_timestamp (start), unix_timestamp (end)
 		 */
 
 		$positions = [];
@@ -58,11 +58,18 @@ class PositionController extends ApiController
 		// only admin/manager can access this method
 		$this->denyAccessUnlessGranted(VoterEvent::VIEW_POSITION, null, self::FAIL_NOT_AUTHORIZED_MESSAGE);
 
-		$range = $request->query->get('range');
+		$range = $request->query->get('timerange');
 		if (isset($range)) {
 			$times = explode(",", $range);
 			$start = $times[0];
 			$end = $times[1];
+
+			try {
+				v::notBlank()->numeric()->assert($start);
+				v::notBlank()->numeric()->assert($end);
+			} catch (NestedValidationException $exception) {
+				throw new HttpException(400, $exception->getFullMessage());
+			}
 
 			$positions = $this->positionManager->findByRange($start, $end, $user_id);
 		} else
@@ -91,6 +98,7 @@ class PositionController extends ApiController
 		 * radius: <int(km)>
 		 * [mode: "area"]
 		 * [user_id: <int>]
+		 * [timerange]: unix_timestamp (start), unix_timestamp (end)
 		 *
 		 */
 		$radius = intval($request->query->get('radius'));
@@ -119,10 +127,26 @@ class PositionController extends ApiController
 			}
 		}
 
+		$range = $request->query->get('timerange');
+		$startTime = null;
+		$endTime = null;
+		if (isset($range)) {
+			$times = explode(",", $range);
+			$startTime = $times[0];
+			$endTime = $times[1];
+
+			try {
+				v::notBlank()->numeric()->assert($startTime);
+				v::notBlank()->numeric()->assert($endTime);
+			} catch (NestedValidationException $exception) {
+				throw new HttpException(400, $exception->getFullMessage());
+			}
+		}
+
 		// all user can access this method
 		//$this->denyAccessUnlessGranted(VoterEvent::VIEW_POSITION_RADIUS, null, self::FAIL_NOT_AUTHORIZED_MESSAGE);
 
-		$positions = $this->positionManager->findByRadius($mode, $from[0], $from[1], $radius, $user_id);
+		$positions = $this->positionManager->findByRadius($mode, $from[0], $from[1], $radius, $startTime, $endTime, $user_id);
 
 		return $this->renderJSON(
 			['position' => $positions],
