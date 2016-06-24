@@ -4,6 +4,7 @@ namespace Tests\AppBundle\Model;
 
 use AppBundle\DataFixtures\ORM\LoadPositionData;
 use AppBundle\DataFixtures\ORM\LoadUserData;
+use AppBundle\Model\AreaRange;
 use AppBundle\Model\DriverPositionManager;
 use AppBundle\Model\TimeRange;
 
@@ -86,5 +87,46 @@ class DriverPositionManagerTest extends FixtureAwareTestCase
 		$position = $this->dpm->findByTimeRange($time_range);
 		$this->assertNotNull($position);
 		$this->assertEquals(0, count($position));
+	}
+
+	public function testFindByAreaRange()
+	{
+		$params = [
+			'lat' => '50.7531987',
+			'lng' => '7.0912389'
+		];
+
+		$area = new AreaRange($params['lat'], $params['lng'], 10000);
+		$position = $this->dpm->findByAreaRange($area);
+		$this->assertNotNull($position);
+		$this->assertEquals(50.7531987, $position[0]->lat);
+	}
+
+	public function testFindByAreaRangeOutOfBound()
+	{
+		$params = [
+			'lat' => '50.7531987',
+			'lng' => '7.0912389'
+		];
+
+		//0.009000009 = 1000/111111
+		$area = new AreaRange($params['lat'] + 0.009000009, $params['lng'] + 0.009000009, 1000);
+		$position = $this->dpm->findByAreaRange($area);
+		$this->assertNotNull($position);
+		$this->assertEquals(0, count($position));
+	}
+
+	public function testFindByAreaRangeInBound()
+	{
+		$params = [
+			'lat' => '50.7531987',
+			'lng' => '7.0912389'
+		];
+
+		$area = new AreaRange($params['lat'] - 0.009000009, $params['lng'] - 0.009000009, 2000);
+		$position = $this->dpm->findByAreaRange($area);
+		$this->assertNotNull($position);
+		$this->assertEquals(1, count($position));
+		$this->assertEquals(50.7531987, $position[0]->lat);
 	}
 }

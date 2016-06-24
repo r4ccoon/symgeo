@@ -50,7 +50,16 @@ class AreaRange
 
 	public function getRadius()
 	{
-		return $this->radius;
+		return $this->convertMeterToCoordinateOffset($this->radius);
+	}
+
+	public static function convertMeterToCoordinateOffset($meter)
+	{
+		$const_meter = 111111;
+		$degree = 1;
+
+		$res = $meter / $const_meter;
+		return $res;
 	}
 
 }
