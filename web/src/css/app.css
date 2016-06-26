@@ -28,3 +28,7 @@ body {
     color: #fefefe;
     top: 0.25rem !important;
 }
+
+.skin-black .user-panel > .info, .skin-black .user-panel > .info > a {
+    color: #000;
+}
