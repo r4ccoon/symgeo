@@ -93,8 +93,8 @@ class FleetController extends ApiController
 
 		$fleet = $this->fleetManager->create();
 
-		$params['user'] = $this->userManager->findUserBy(['id' => $params['user_id']]);
-		if (!$params['user'] instanceof User)
+		$params['created_by'] = $this->userManager->findUserBy(['id' => $params['created_by']]);
+		if (!$params['created_by'] instanceof User)
 			throw new HttpException(400, "User not found");
 
 		$this->fleetManager->setFromParams($fleet, $params);
@@ -110,12 +110,12 @@ class FleetController extends ApiController
 				['fleet' => $fleet],
 				self::SUCCESS_CREATED);
 		} else {
-			throw new HttpException(400, "Cannot create user");
+			throw new HttpException(400, "Cannot create fleet");
 		}
 	}
 
 	/**
-	 * @Route("/api/v1/fleet") 
+	 * @Route("/api/v1/fleet")
 	 * @Method("DELETE")
 	 */
 	public function deleteFleetAction(Request $request)

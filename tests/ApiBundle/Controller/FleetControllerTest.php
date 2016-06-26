@@ -37,7 +37,7 @@ class FleetControllerTest extends BaseTestController
 	{
 		$fleet = [
 			"name" => $this->username,
-			"user_id" => $uid
+			"created_by" => $uid
 		];
 
 		$response = $this->sendJSONPost("fleet", $fleet);
@@ -45,7 +45,7 @@ class FleetControllerTest extends BaseTestController
 
 		$result = json_decode($response->getContent());
 		$this->assertEquals($fleet['name'], $result->fleet->name);
-		$this->assertNotNull($result->fleet->user);
+		$this->assertNotNull($result->fleet->created_by);
 
 		return $result->fleet->id;
 	}

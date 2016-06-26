@@ -21,4 +21,11 @@ class User extends BaseUser
 	{
 		parent::__construct();
 	}
+
+	/**
+	 * @ORM\ManyToOne(targetEntity="Company")
+	 * @ORM\JoinColumn(name="company_id", referencedColumnName="id", nullable=true)
+	 *
+	 */
+	public $company;
 } 

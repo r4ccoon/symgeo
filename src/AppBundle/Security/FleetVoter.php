@@ -57,14 +57,14 @@ class FleetVoter extends Voter
 
 			// manager can see all their own fleets
 			if (is_array($subject) && $attribute == VoterEvent::VIEW) {
-				if (isset($subject[0]) && $subject[0]->user == $user) {
+				if (isset($subject[0]) && $subject[0]->createdBy == $user) {
 					return true;
 				}
 
 				return false;
 			} else
 				// manager can create/view/edit/delete its own fleet
-				if ($subject->user == $user) {
+				if ($subject->createdBy == $user) {
 					return true;
 				}
 		}

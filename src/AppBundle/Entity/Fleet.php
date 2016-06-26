@@ -7,20 +7,20 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="fleet")
  */
-class Fleet
+class Fleet extends BaseEntity
 {
 	/**
-	 * @ORM\Id
-	 * @ORM\Column(type="integer")
-	 * @ORM\GeneratedValue(strategy="AUTO")
+	 * @ORM\ManyToOne(targetEntity="User", fetch="EAGER", cascade={"persist"})
+	 * @ORM\JoinColumn(name="created_by", referencedColumnName="id", nullable=false)
 	 */
-	protected $id;
+	public $createdBy;
 
 	/**
-	 * @ORM\ManyToOne(targetEntity="User", fetch="EAGER", cascade={"persist"})
-	 * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=false)
+	 * @ORM\ManyToOne(targetEntity="Company")
+	 * @ORM\JoinColumn(name="company_id", referencedColumnName="id", nullable=true)
+	 *
 	 */
-	public $user;
+	public $company;
 
 	/**
 	 * @ORM\Column(type="string")
@@ -31,13 +31,4 @@ class Fleet
 	 * @ORM\Column(type="string")
 	 */
 	public $name;
-
-	public function __construct()
-	{
-	}
-
-	public function getId()
-	{
-		return $this->id;
-	}
 }
