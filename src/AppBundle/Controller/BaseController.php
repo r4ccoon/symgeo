@@ -12,37 +12,17 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-class PanelController extends BaseController
+class BaseController extends Controller implements IConstructorController
 {
-	private $userManager;
-	private $facebookManager;
-
 	public function __init()
 	{
-		$this->userManager = $this->get('fos_user.user_manager');
-		$this->facebookManager = $this->get('facebook.manager');
 	}
 
-	/**
-	 * @Route("/panel/", name="panel")
-	 */
-	public function indexAction()
+	protected function checkLoggedin()
 	{
 		$user = $this->getUser();
-
-		return $this->render(
-			'panel/index.html.twig',
-			array('user' => $user)
-		);
-	}
-
-	/**
-	 * @Route("/panel/company", name="company")
-	 */
-	public function companyAction()
-	{
-		return $this->render(
-			'panel/company.html.twig'
-		);
+		if (!is_object($user) || !$user instanceof UserInterface) {
+			throw new AccessDeniedException('This user does not have access to this section.');
+		}
 	}
 }

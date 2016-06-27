@@ -7,16 +7,16 @@
 
     <title>{% block title %}Welcome!{% endblock %}</title>
 
+    <link rel="stylesheet" href="{{ asset('assets/vendor/AdminLTE/bootstrap/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/vendor/ionicons/css/ionicons.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/vendor/font-awesome/css/font-awesome.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/vendor/AdminLTE/dist/css/AdminLTE.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/vendor/AdminLTE/dist/css/skins/skin-black.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/vendor/AdminLTE/plugins/datepicker/datepicker3.css') }}">
+    <link rel="stylesheet"
+          href="{{ asset('assets/vendor/AdminLTE/plugins/daterangepicker/daterangepicker-bs3.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/dist/app.css') }}">
     {% block stylesheets %}
-        <link rel="stylesheet" href="{{ asset('assets/vendor/AdminLTE/bootstrap/css/bootstrap.min.css') }}">
-        <link rel="stylesheet" href="{{ asset('assets/vendor/ionicons/css/ionicons.min.css') }}">
-        <link rel="stylesheet" href="{{ asset('assets/vendor/font-awesome/css/font-awesome.min.css') }}">
-        <link rel="stylesheet" href="{{ asset('assets/vendor/AdminLTE/dist/css/AdminLTE.min.css') }}">
-        <link rel="stylesheet" href="{{ asset('assets/vendor/AdminLTE/dist/css/skins/skin-black.min.css') }}">
-        <link rel="stylesheet" href="{{ asset('assets/vendor/AdminLTE/plugins/datepicker/datepicker3.css') }}">
-        <link rel="stylesheet"
-              href="{{ asset('assets/vendor/AdminLTE/plugins/daterangepicker/daterangepicker-bs3.css') }}">
-        <link rel="stylesheet" href="{{ asset('assets/dist/app.css') }}">
     {% endblock %}
 
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}"/>
@@ -33,7 +33,8 @@
     {% embed "panel/sidebar.html.twig" %}{% endembed %}
 
     <div class="content-wrapper">
-        {% embed "panel/content-header.html.twig" %}{% endembed %}
+        {% block contentHeader %}
+        {% endblock %}
 
         <!-- Main content -->
         <section class="content">
@@ -49,47 +50,48 @@
 
 </div>
 
-{% block javascripts %}
-    <!--[if lt IE 9]>
-    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
-    <script src="{{ asset('assets/vendor/AdminLTE/plugins/jQuery/jQuery-2.2.0.min.js') }}"></script>
-    <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
-    <script>
-        $.widget.bridge('uibutton', $.ui.button);
-    </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.11.2/moment.min.js"></script>
-    <script src="{{ asset('assets/vendor/AdminLTE/bootstrap/js/bootstrap.min.js') }}"></script>
-    <script src="{{ asset('assets/vendor/AdminLTE/plugins/daterangepicker/daterangepicker.js') }}"></script>
-    <script src="{{ asset('assets/vendor/AdminLTE/plugins/datepicker/bootstrap-datepicker.js') }}"></script>
-    <script src="{{ asset('assets/vendor/AdminLTE/plugins/slimScroll/jquery.slimscroll.min.js') }}"></script>
-    <script src="{{ asset('assets/vendor/AdminLTE/plugins/fastclick/fastclick.js') }}"></script>
-    <!-- AdminLTE App -->
-    <script>
-        var AdminLTEOptions = {
-            sidebarToggleSelector: "[data-toggle='offcanvas']",
-            sidebarPushMenu: true,
-            sidebarExpandOnHover: false,
-            //BoxRefresh Plugin
-            enableBoxRefresh: true,
-            //Bootstrap.js tooltip
-            enableBSToppltip: true,
-            BSTooltipSelector: "[data-toggle='tooltip']",
-            enableFastclick: true,
-            //Control Sidebar Options
-            enableControlSidebar: true,
-            controlSidebarOptions: {
-                //Which button should trigger the open/close event
-                toggleBtnSelector: "[data-toggle='control-sidebar']",
-                //The sidebar selector
-                selector: ".control-sidebar",
-                //Enable slide over content
-                slide: true
-            }
+<!--[if lt IE 9]>
+<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+<![endif]-->
+<script src="{{ asset('assets/vendor/AdminLTE/plugins/jQuery/jQuery-2.2.0.min.js') }}"></script>
+<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+<script>
+    $.widget.bridge('uibutton', $.ui.button);
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.11.2/moment.min.js"></script>
+<script src="{{ asset('assets/vendor/AdminLTE/bootstrap/js/bootstrap.min.js') }}"></script>
+<script src="{{ asset('assets/vendor/AdminLTE/plugins/daterangepicker/daterangepicker.js') }}"></script>
+<script src="{{ asset('assets/vendor/AdminLTE/plugins/datepicker/bootstrap-datepicker.js') }}"></script>
+<script src="{{ asset('assets/vendor/AdminLTE/plugins/slimScroll/jquery.slimscroll.min.js') }}"></script>
+<script src="{{ asset('assets/vendor/AdminLTE/plugins/fastclick/fastclick.js') }}"></script>
+<!-- AdminLTE App -->
+<script>
+    var AdminLTEOptions = {
+        sidebarToggleSelector: "[data-toggle='offcanvas']",
+        sidebarPushMenu: true,
+        sidebarExpandOnHover: false,
+        //BoxRefresh Plugin
+        enableBoxRefresh: true,
+        //Bootstrap.js tooltip
+        enableBSToppltip: true,
+        BSTooltipSelector: "[data-toggle='tooltip']",
+        enableFastclick: true,
+        //Control Sidebar Options
+        enableControlSidebar: true,
+        controlSidebarOptions: {
+            //Which button should trigger the open/close event
+            toggleBtnSelector: "[data-toggle='control-sidebar']",
+            //The sidebar selector
+            selector: ".control-sidebar",
+            //Enable slide over content
+            slide: true
         }
-    </script>
-    <script src="{{ asset('assets/vendor/AdminLTE/dist/js/app.min.js') }}"></script>
+    }
+</script>
+<script src="{{ asset('assets/vendor/AdminLTE/dist/js/app.min.js') }}"></script>
+
+{% block javascripts %}
 {% endblock %}
 
 </body>

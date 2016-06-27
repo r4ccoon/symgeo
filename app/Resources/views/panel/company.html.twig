@@ -1,21 +1,23 @@
 {% extends 'adminBase.html.twig' %}
 
-{% block title %}User Panel Home{% endblock %}
+{% block title %}Manage Companies{% endblock %}
 
 {% block contentHeader %}
     {% embed "panel/content-header.html.twig" %}
         {% block pageHeading %}
-            Dashboard
-            <small>Control panel</small>
+            Manage Companies
         {% endblock %}
         {% block breadCrumb %}
             <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-            <li class="active">Dashboard</li>
+            <li class="active">Company</li>
         {% endblock %}
     {% endembed %}
 {% endblock %}
 
-
 {% block body %}
-    {{ dump(user) }}
+    <div id="company"></div>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('assets/dist/bundle.js') }}"></script>
 {% endblock %}
