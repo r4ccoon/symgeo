@@ -23,7 +23,7 @@ if (isProduction) {
 }
 
 module.exports = {
-    entry: ['babel-polyfill', path.normalize(__dirname + '/web/src/js/main')],
+    entry: ['whatwg-fetch', 'babel-polyfill', path.normalize(__dirname + '/web/src/js/main')],
     devtool: 'cheap-module-source-map',
     output: {
         filename: 'bundle.js',
