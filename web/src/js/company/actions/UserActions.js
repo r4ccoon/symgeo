@@ -1,5 +1,5 @@
 import alt from '../alt';
-import url from '../../common/RUrl';
+import RFetch from '../../common/RFetch';
 
 class UserActions {
     getUsers(users) {
@@ -10,7 +10,7 @@ class UserActions {
         return (dispatch) => {
             // we dispatch an event here so we can have "loading" state.
             dispatch();
-            fetch(url.resource('user', {username: username}))
+            RFetch.get('user/search', {username: username})
                 .then((users) => {
                     // we can access other actions within our action through `this.actions`
                     this.getUsers(users);

@@ -1,5 +1,5 @@
 import alt from '../alt';
-import url from '../../common/RUrl';
+import RFetch from '../../common/RFetch';
 
 class AddCompanyActions {
     postResult(result) {
@@ -9,13 +9,7 @@ class AddCompanyActions {
     handleSubmit(company) {
         return (dispatch) => {
             dispatch();
-            fetch(url.resource('company'), {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(company)
-            })
+            RFetch.post('company', false, company)
                 .then((result) => {
                     // we can access other actions within our action through `this.actions`
                     this.postResult(result);

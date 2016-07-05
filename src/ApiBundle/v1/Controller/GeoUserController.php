@@ -43,26 +43,29 @@ class GeoUserController extends ApiController
 	}
 
 	/**
-	 * @Route("/api/v1/user/username")
+	 * @Route("/api/v1/user/search")
 	 * @Method("GET")
 	 */
-	public function getUserUsernameAction(Request $request)
+	public function getUserSearchAction(Request $request)
 	{
 		$user = $this->getUser();
 		if (!is_object($user) || !$user instanceof UserInterface) {
 			throw new AccessDeniedException(
 				self::FAIL_NOT_AUTHORIZED_MESSAGE);
 		}
-		
+
 		$username = $request->get('username');
+		if (!$username)
+			throw new HttpException(400, "Need required parameter username.");
+
 		$users = $this->geoUserManager->findUserBy(['username' => $username]);
 
-		if ($users && $users[0]) {
+		if ($users) {
 			return $this->renderJSON(
-				['username' => $users[0]->getUsername()],
+				['username' => $users->getUsername()],
 				self::SUCCESS);
 		} else {
-			throw new HttpException(401, "Not Authorised.");
+			throw new HttpException(404, "Not Found.");
 		}
 	}
 

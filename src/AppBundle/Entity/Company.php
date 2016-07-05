@@ -20,4 +20,9 @@ class Company extends BaseEntity
 	 * @ORM\Column(type="string")
 	 */
 	public $name;
+	
+	/**
+	 * @ORM\Column(type="string")
+	 */
+	public $slug;
 }

@@ -6,9 +6,16 @@ class RUrl {
     resource(url, searchParams) {
         var finalUrl = this.baseUrl + url;
 
+        if (!searchParams) {
+            searchParams = {};
+        }
+        
+        searchParams['XDEBUG_SESSION_START'] = 'vagrant';
+
         if (searchParams) {
             finalUrl = this.baseUrl + url + '?' + this.populateParams(searchParams);
         }
+
 
         return finalUrl;
     }

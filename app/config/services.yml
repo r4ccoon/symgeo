@@ -21,6 +21,10 @@ services:
         class: AppBundle\Model\FleetManager
         arguments: [ "@doctrine.orm.entity_manager" ]
 
+    company.manager:
+        class: AppBundle\Model\CompanyManager
+        arguments: [ "@doctrine.orm.entity_manager" ]
+
     geo_user.manager:
         class: AppBundle\Model\GeoUserManager
         arguments: ["@security.encoder_factory", "@fos_user.util.username_canonicalizer", "@fos_user.util.email_canonicalizer", "@fos_user.object_manager", %fos_user.model.user.class%]
@@ -48,12 +52,27 @@ services:
             - { name: security.voter }
         public: false
 
+    app.company_voter:
+        class: AppBundle\Security\CompanyVoter
+        arguments: ['@security.access.decision_manager']
+        tags:
+            - { name: security.voter }
+        public: false
+
     app.position_voter:
         class: AppBundle\Security\PositionVoter
         arguments: ['@security.access.decision_manager']
         tags:
             - { name: security.voter }
         public: false
+
+    app.form_login_authenticator:
+        class: AppBundle\Security\FormLoginAuthenticator
+        arguments: ["@service_container", "@security.token_storage"]
+
+    app.fos_oauth_authenticator:
+        class: AppBundle\Security\FOSOAuthAuthenticator
+        arguments: ["@service_container", "@fos_oauth_server.server"]
 
     serializer.method:
         class: Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer
@@ -70,3 +89,4 @@ services:
         arguments:
             - ["@serializer.method"]
             - {json: "@serializer.encoder.json" }
+

@@ -40,8 +40,7 @@ class AddModal extends React.Component {
         }, 1500);
     }
 
-    handleSubmit(event) {
-        console.log('bahh');
+    handleSubmit(event) { 
         event.preventDefault();
 
         var name = this.state.name.trim();
@@ -56,7 +55,6 @@ class AddModal extends React.Component {
         });
 
         this.props.saveAndClose();
-        console.log('bass');
     }
 
     handleNameChange(event) {
