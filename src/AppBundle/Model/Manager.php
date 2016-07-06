@@ -30,6 +30,11 @@ abstract class Manager
 		);
 	}
 
+	public function findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+	{
+		return $this->repository->findBy($criteria, $orderBy, $limit, $offset);
+	}
+
 	public function delete($obj)
 	{
 		$this->objectManager->remove($obj);

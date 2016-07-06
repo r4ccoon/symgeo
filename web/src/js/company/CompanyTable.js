@@ -1,30 +1,45 @@
 import React from "react";
-import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
+import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
+import CompanyStore from "./stores/CompanyStore";
+import CompanyActions  from "./actions/CompanyActions";
 
-var products = [{
-    id: 1,
-    name: "Item name 1",
-    price: 100
-}, {
-    id: 2,
-    name: "Item name 2",
-    price: 100
-}];
+class CompanyTable extends React.Component {
+    constructor(props) {
+        super(props);
 
-function priceFormatter(cell, row) {
-    return '<i class="glyphicon glyphicon-usd"></i> ' + cell;
-}
+        this.state = CompanyStore.getState();
 
-export default class CompanyTable extends React.Component {
+        this.onChange = this.onChange.bind(this);
+    }
+
+    componentDidMount() {
+        CompanyActions.fetch();
+        CompanyStore.listen(this.onChange);
+    }
+
+    componentWillUnmount() {
+        CompanyStore.unlisten(this.onChange);
+    }
+
+    onChange(state) {
+        this.setState(state);
+    }
+
+    showUsername(owner) {
+        return owner.username;
+    }
+
     render() {
         return (
-            <BootstrapTable data={products} striped={true} hover={true}>
+            <BootstrapTable data={this.state.companies} striped={true} hover={true}>
                 <TableHeaderColumn dataField="id" isKey={true} dataAlign="center" dataSort={true}>
-                    Product ID
+                    Id
                 </TableHeaderColumn>
-                <TableHeaderColumn dataField="name" dataSort={true}>Product Name</TableHeaderColumn>
-                <TableHeaderColumn dataField="price" dataFormat={priceFormatter}>Product Price</TableHeaderColumn>
+                <TableHeaderColumn dataField="name" dataSort={true}>Company Name</TableHeaderColumn>
+                <TableHeaderColumn dataField="owner" dataFormat={this.showUsername}>Owner</TableHeaderColumn>
             </BootstrapTable>
         )
     }
 }
+
+export default CompanyTable;

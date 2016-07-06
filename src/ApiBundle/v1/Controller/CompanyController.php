@@ -53,6 +53,35 @@ class CompanyController extends ApiController
 
 	/**
 	 * @Route("/api/v1/company")
+	 * @Method("GET")
+	 */
+	public function getCompanyAction(Request $request)
+	{
+		$offset = $request->get('offset', 0);
+		$limit = $request->get('limit', 10);
+		$orderBy = $request->get('orderBy', 'name');
+
+		try {
+			if ($offset)
+				v::numeric()->assert($offset);
+			if ($limit)
+				v::numeric()->assert($limit);
+			if ($orderBy)
+				v::alnum("_-")->noWhitespace()->assert($orderBy);
+
+		} catch (NestedValidationException $exception) {
+			throw new HttpException(400, $exception->getFullMessage());
+		}
+
+		$comp = $this->companyManager->findBy([], [$orderBy => 'asc'], $limit, $offset);
+
+		return $this->renderJSON(
+			['company' => $comp],
+			self::SUCCESS);
+	}
+
+	/**
+	 * @Route("/api/v1/company")
 	 * @Method("POST")
 	 */
 	public function createCompanyAction(Request $request)

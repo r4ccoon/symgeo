@@ -4,6 +4,8 @@ const RFetch = {
     get: function (path, params) {
         return fetch(url.resource(path, params), {
             credentials: 'same-origin'
+        }).then(function (response) {
+            return response.json()
         });
     },
 
@@ -15,6 +17,8 @@ const RFetch = {
             },
             body: JSON.stringify(paramsBody),
             credentials: 'same-origin'
+        }).then(function (response) {
+            return response.json()
         })
     }
 };
