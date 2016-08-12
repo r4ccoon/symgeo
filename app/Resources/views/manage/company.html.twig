@@ -1,0 +1,23 @@
+{% extends 'adminBase.html.twig' %}
+
+{% block title %}Manage Companies{% endblock %}
+
+{% block contentHeader %}
+    {% embed "manage/content-header.html.twig" %}
+        {% block pageHeading %}
+            Manage Companies
+        {% endblock %}
+        {% block breadCrumb %}
+            <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+            <li class="active">Company</li>
+        {% endblock %}
+    {% endembed %}
+{% endblock %}
+
+{% block body %}
+    <div id="company"></div>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('assets/dist/bundle.js') }}"></script>
+{% endblock %}

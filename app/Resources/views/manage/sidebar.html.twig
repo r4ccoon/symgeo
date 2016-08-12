@@ -1,0 +1,25 @@
+<aside class="main-sidebar">
+    <section class="sidebar">
+
+        <ul class="sidebar-menu">
+            <li class="header">Main Menu</li>
+            <li><a href="/manage/company-slug"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
+            <li><a href="/manage/profile"><i class="fa fa-user"></i> <span>Profile</span></a></li>
+
+            {% if is_granted('ROLE_MANAGER') or is_granted('ROLE_ADMIN') %}
+                <li class="header">Manager Menu</li>
+                <li><a href="/manage/company-slug/fleets"><i class="fa fa-bus"></i> <span>Fleets</span></a></li>
+                <li><a href="/manage/company-slug/drivers"><i class="fa fa-users"></i> <span>Drivers</span></a></li>
+                <li><a href="/manage/company-slug/jobs"><i class="fa fa-tasks"></i> <span>Jobs</span></a></li>
+                <li><a href="/manage/company-slug/monitoring"><i class="fa fa-binoculars"></i> <span>Monitoring</span></a></li>
+            {% endif %}
+            {% if is_granted('ROLE_DRIVER') %}
+                <li class="header">Driver Menu</li>
+                <li><a href="/manage/driver/job"><i class="fa fa-list"></i> <span>Jobs</span></a></li>
+                <li><a href="/manage/driver/fleet"><i class="fa fa-car"></i> <span>Fleets</span></a></li>
+                <li><a href="/manage/driver/status"><i class="fa fa-cloud"></i> <span>Online Status</span></a></li>
+            {% endif %}
+        </ul>
+    </section>
+    <!-- /.sidebar -->
+</aside>

@@ -29,13 +29,18 @@ class CompanyTable extends React.Component {
         return owner.username;
     }
 
+    showCompanyLink(cell, row) {
+        return '<a href="/panel/manage/' + row.slug + '/">' + row.name + '</a>';
+    }
+
     render() {
         return (
             <BootstrapTable data={this.state.companies} striped={true} hover={true}>
                 <TableHeaderColumn dataField="id" isKey={true} dataAlign="center" dataSort={true}>
                     Id
                 </TableHeaderColumn>
-                <TableHeaderColumn dataField="name" dataSort={true}>Company Name</TableHeaderColumn>
+                <TableHeaderColumn dataField="name" dataSort={true} dataFormat={this.showCompanyLink}>Company
+                    Name</TableHeaderColumn>
                 <TableHeaderColumn dataField="owner" dataFormat={this.showUsername}>Owner</TableHeaderColumn>
             </BootstrapTable>
         )

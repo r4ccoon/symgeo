@@ -1,0 +1,21 @@
+{% extends 'adminBase.html.twig' %}
+
+{% block title %}User Panel Home{% endblock %}
+
+{% block contentHeader %}
+    {% embed "manage/content-header.html.twig" %}
+        {% block pageHeading %}
+            Dashboard
+            <small>Control panel</small>
+        {% endblock %}
+        {% block breadCrumb %}
+            <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+            <li class="active">Dashboard</li>
+        {% endblock %}
+    {% endembed %}
+{% endblock %}
+
+
+{% block body %}
+
+{% endblock %}
