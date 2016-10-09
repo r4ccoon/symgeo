@@ -3,19 +3,14 @@ namespace ApiBundle\v1\Controller;
 
 use AppBundle\Model\DriverPositionManager;
 use AppBundle\VoterEvent;
-use FOS\UserBundle\Model\User;
-use FOS\UserBundle\Model\UserInterface;
 use FOS\UserBundle\Model\UserManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Assetic\Filter\PackerFilter;
-use Doctrine\Common\CommonException;
 use Respect\Validation\Exceptions\NestedValidationException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Respect\Validation\Validator as v;
 
 class PositionController extends ApiController
@@ -144,6 +139,7 @@ class PositionController extends ApiController
 		}
 
 		// all user can access this method
+		// todo: decide what users can access driver positions
 		//$this->denyAccessUnlessGranted(VoterEvent::VIEW_POSITION_RADIUS, null, self::FAIL_NOT_AUTHORIZED_MESSAGE);
 
 		$positions = $this->positionManager->findByRadius($mode, $from[0], $from[1], $radius, $startTime, $endTime, $user_id);
@@ -181,18 +177,13 @@ class PositionController extends ApiController
 		try {
 			v::notBlank()->floatVal()->assert($params['lat']);
 			v::notBlank()->floatVal()->assert($params['lng']);
-			/*$params['lat'] = floatval($params['lat']);
-			$params['lng'] = floatval($params['lng']);*/
 		} catch (NestedValidationException $exception) {
 			throw new HttpException(400, $exception->getFullMessage());
 		}
 
-		$pos = $this->positionManager->create();
 		$params['user'] = $this->getUser();
-		$this->positionManager->setFromParams($pos, $params);
 
-		// update / save to DB
-		$this->positionManager->update($pos);
+		$pos = $this->positionManager->createPosition($params);
 
 		if ($pos) {
 			return $this->renderJSON(

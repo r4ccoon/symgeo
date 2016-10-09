@@ -36,7 +36,29 @@ class DriverPositionManager extends Manager
 		return $this->findByRange($area_range, $time_range, $user_id);
 	}
 
-	protected function findByRange(AreaRange $area_range = null, TimeRange $time_range = null, $user_id = null)
+	public function setFromParams($pos, $params)
+	{
+		$pos->user = $params['user'];
+		$pos->lat = $params['lat'];
+		$pos->lng = $params['lng'];
+
+		return $pos;
+	}
+
+	/**
+	 * @param $params
+	 * @return mixed
+	 */
+	public function createPosition($params)
+	{
+		$pos = $this->create();
+		$this->setFromParams($pos, $params);
+		$this->update($pos);
+
+		return $pos;
+	}
+
+	public function findByRange(AreaRange $area_range = null, TimeRange $time_range = null, $user_id = null)
 	{
 		$qb = $this->repository->createQueryBuilder("a");
 		$qb->where("a.id > 0");
@@ -71,12 +93,4 @@ class DriverPositionManager extends Manager
 		return $result;
 	}
 
-	public function setFromParams($pos, $params)
-	{
-		$pos->user = $params['user'];
-		$pos->lat = $params['lat'];
-		$pos->lng = $params['lng'];
-
-		return $pos;
-	}
 }
